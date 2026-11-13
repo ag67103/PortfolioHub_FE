@@ -48,7 +48,7 @@ export interface Education {
     institution: string;
     start_date: any;
     end_date?: any;
-    description: string;
+    description?: string | null;
     created_at?: string;
     updated_at?: string;
     
@@ -95,9 +95,9 @@ export interface Portfolio {
 export interface Message {
     _id?: string | null;
     conversationId: string;  // Required: Conversation ID to group related messages
-    senderName: string;
-    senderEmail: string;
-    messageSubject: string;
+    senderName?: string | null;
+    senderEmail?: string | null;
+    messageSubject?: string | null;
     messageContent: string;
     created_at?: string;
     updated_at?: string;
@@ -116,40 +116,13 @@ export interface Award {
     name: string;
     issuer: string;
     issue_date: any;
-    description: string;
+    description?: string | null;
     category: string;
     created_at?: string;
     updated_at?: string;
 
     status_code?: number;
     message?: string;
-}
-
-export interface Message {
-    _id?: string | null;
-    conversationId: string;  // Required: Conversation ID to group related messages
-    senderName: string;
-    senderEmail: string;
-    messageSubject: string;
-    messageContent: string;
-    created_at?: string;
-    isRead?: boolean;
-    senderUserId?: string | null;
-    recipientUserId?: string;
-
-    status_code?: number;
-    message?: string;
-}
-
-export interface GroupedMessageModel {
-    conversationKey: string;
-    sender: string;
-    senderEmail: string;
-    recipientName: string;
-    recipientEmail: string;
-    messages: Message[];
-    unreadCount: number;
-    latestMessage: Message;
 }
 
 export interface MessageCount {
@@ -160,8 +133,8 @@ export interface MessageCount {
 
 export interface GroupedMessageModel {
     conversationKey: string;
-    sender: string;
-    senderEmail: string;
+    sender?: string | null;
+    senderEmail?: string | null;
     recipientName: string;
     recipientEmail: string;
     messages: Message[];

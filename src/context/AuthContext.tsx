@@ -1,5 +1,4 @@
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
-import UserDataService from "../services/userDataService";
 import { useLocation } from "react-router-dom";
 import { getMe, getUserByUserId, incrementVisitorCount, logout as logoutApi } from "../services/api";
 
@@ -8,7 +7,6 @@ interface AuthContextType {
     setIsAuthenticated: (value: boolean) => void;
     loggedInUser: any;
     setLoggedInUser: (user: any) => void;
-    isLoading: boolean;
     isMe: boolean;
     setIsMe: (value: boolean) => void;
     isValidUser: boolean;
@@ -27,7 +25,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [isMe, setIsMe] = useState(false);
     const [isValidUser, setIsValidUser] = useState(false);
-    const [isLoading, setIsLoading] = useState(true);
 
     const [isLoggedInUserLoading, setIsLoggedInUserLoading] = useState(true);
     const [loggedInUser, setLoggedInUser] = useState<any>(null);
@@ -114,7 +111,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ isAuthenticated, setIsAuthenticated, isMe, setIsMe, isValidUser, setIsValidUser, loggedInUser, setLoggedInUser, currentUser, setCurrentUser, isLoading, logout, isCurrentUserLoading, setIsCurrentUserLoading }}>
+        <AuthContext.Provider value={{ isAuthenticated, setIsAuthenticated, isMe, setIsMe, isValidUser, setIsValidUser, loggedInUser, setLoggedInUser, currentUser, setCurrentUser, logout, isCurrentUserLoading, setIsCurrentUserLoading }}>
             {children}
         </AuthContext.Provider>
     );

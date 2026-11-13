@@ -36,7 +36,7 @@ const MonthYearPicker: React.FC<MonthYearPickerProps> = ({ value, onChange, plac
     'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
   ];
 
-  const years = Array.from({ length: 20 }, (_, i) => new Date().getFullYear() - 10 + i);
+  const years = Array.from({ length: new Date().getFullYear() - 1950 + 6 }, (_, i) => 1950 + i);
 
   // Helper function to parse date strings
   const parseDate = (dateString: string): Date | null => {
@@ -209,16 +209,16 @@ const MonthYearPicker: React.FC<MonthYearPickerProps> = ({ value, onChange, plac
         type="button"
         onClick={() => !disabled && setIsOpen(!isOpen)}
         disabled={disabled}
-        className={`w-full px-4 py-3 rounded-xl border border-gray-200 text-left flex items-center justify-between transition-all duration-200 ${
+        className={`w-full px-4 py-2.5 rounded-lg border text-left flex items-center justify-between transition-colors text-sm ${
           disabled
-            ? 'bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed'
-            : 'bg-white/50 backdrop-blur-sm border-gray-200 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 hover:bg-white/70 hover:border-gray-300'
+            ? 'bg-obsidian-surface border-obsidian-border text-ink-muted cursor-not-allowed opacity-50'
+            : 'bg-obsidian-surface border-obsidian-border text-ink-primary hover:border-accent-indigo/40 focus:outline-none focus:border-accent-indigo/50'
         }`}
       >
-        <span className={value ? 'text-gray-900' : 'text-gray-500'}>
+        <span className={value ? 'text-ink-primary' : 'text-ink-muted'}>
           {formatDisplayValue(value)}
         </span>
-        <Calendar className="w-4 h-4 text-gray-500" />
+        <Calendar className="w-4 h-4 text-ink-muted" />
       </button>
 
       {/* Date Picker Dropdown */}
@@ -227,91 +227,40 @@ const MonthYearPicker: React.FC<MonthYearPickerProps> = ({ value, onChange, plac
           {/* Overlay to close picker when clicking outside */}
           <div className="fixed inset-0 z-10" onClick={() => setIsOpen(false)} />
           
-          <div className="absolute top-full left-0 mt-2 w-80 bg-white rounded-xl shadow-2xl border border-gray-200 z-20">
+          <div className="absolute top-full left-0 mt-2 w-72 bg-obsidian-card border border-obsidian-border rounded-xl shadow-2xl z-20">
             {/* Header */}
-            <div className="flex items-center justify-between p-4 border-b border-gray-100">
-              <div className="flex items-center gap-2">
-                <span className="text-lg font-semibold text-gray-900">
-                  {formatHeaderDisplay()}
-                </span>
+            <div className="flex items-center justify-between p-3 border-b border-obsidian-border">
+              <div className="flex items-center gap-1.5">
+                <span className="text-sm font-semibold text-ink-primary">{formatHeaderDisplay()}</span>
                 <button
                   type="button"
-                  onClick={() => {
-                    if (showYearDropdown) {
-                      // Close year dropdown and show month view
-                      setShowYearDropdown(false);
-                    } else {
-                      // Open year dropdown and hide month view
-                      setShowYearDropdown(true);
-                      setViewMode('month'); // Ensure we're in month view when year dropdown closes
-                    }
-                  }}
-                  className="p-1 hover:bg-gray-100 rounded transition-colors"
+                  onClick={() => { if (showYearDropdown) setShowYearDropdown(false); else { setShowYearDropdown(true); setViewMode('month'); } }}
+                  className="p-1 hover:bg-obsidian-border rounded transition-colors"
                   title="Select year"
                 >
-                  <ChevronDown 
-                    className={`w-4 h-4 text-gray-600 transition-transform duration-200 ${
-                      showYearDropdown ? 'rotate-180' : ''
-                    }`}
-                  />
+                  <ChevronDown className={`w-3.5 h-3.5 text-ink-muted transition-transform duration-200 ${showYearDropdown ? 'rotate-180' : ''}`} />
                 </button>
               </div>
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-0.5">
                 <button
                   type="button"
                   onClick={() => {
-                    if (showYearDropdown) {
-                      setCurrentYear(prev => prev - 1);
-                    } else if (viewMode === 'calendar' && selectedMonth !== null) {
-                      // In calendar view, navigate through months while keeping selectedMonth
-                      setCurrentMonth(prev => prev === 0 ? 11 : prev - 1);
-                      if (currentMonth === 0) {
-                        setCurrentYear(prev => prev - 1);
-                      }
-                    } else {
-                      // In month view, navigate normally
-                      setCurrentMonth(prev => prev === 0 ? 11 : prev - 1);
-                      if (currentMonth === 0) {
-                        setCurrentYear(prev => prev - 1);
-                      }
-                    }
+                    if (showYearDropdown) { setCurrentYear(prev => prev - 1); }
+                    else { setCurrentMonth(prev => prev === 0 ? 11 : prev - 1); if (currentMonth === 0) setCurrentYear(prev => prev - 1); }
                   }}
-                  className={`p-2 rounded-lg transition-colors ${
-                    showYearDropdown 
-                      ? 'bg-blue-100 text-blue-600 hover:bg-blue-200' 
-                      : 'hover:bg-gray-100'
-                  }`}
-                  title={showYearDropdown ? "Previous year" : "Previous month"}
+                  className={`p-1.5 rounded-lg transition-colors ${showYearDropdown ? 'bg-accent-indigo/20 text-accent-indigo' : 'hover:bg-obsidian-border text-ink-muted'}`}
                 >
-                  <ChevronLeft className="w-4 h-4" />
+                  <ChevronLeft className="w-3.5 h-3.5" />
                 </button>
                 <button
                   type="button"
                   onClick={() => {
-                    if (showYearDropdown) {
-                      setCurrentYear(prev => prev + 1);
-                    } else if (viewMode === 'calendar' && selectedMonth !== null) {
-                      // In calendar view, navigate through months while keeping selectedMonth
-                      setCurrentMonth(prev => prev === 11 ? 0 : prev + 1);
-                      if (currentMonth === 11) {
-                        setCurrentYear(prev => prev + 1);
-                      }
-                    } else {
-                      // In month view, navigate normally
-                      setCurrentMonth(prev => prev === 11 ? 0 : prev + 1);
-                      if (currentMonth === 11) {
-                        setCurrentYear(prev => prev + 1);
-                      }
-                    }
+                    if (showYearDropdown) { setCurrentYear(prev => prev + 1); }
+                    else { setCurrentMonth(prev => prev === 11 ? 0 : prev + 1); if (currentMonth === 11) setCurrentYear(prev => prev + 1); }
                   }}
-                  className={`p-2 rounded-lg transition-colors ${
-                    showYearDropdown 
-                      ? 'bg-blue-100 text-blue-600 hover:bg-blue-200' 
-                      : 'hover:bg-gray-100'
-                  }`}
-                  title={showYearDropdown ? "Next year" : "Next month"}
+                  className={`p-1.5 rounded-lg transition-colors ${showYearDropdown ? 'bg-accent-indigo/20 text-accent-indigo' : 'hover:bg-obsidian-border text-ink-muted'}`}
                 >
-                  <ChevronRight className="w-4 h-4" />
+                  <ChevronRight className="w-3.5 h-3.5" />
                 </button>
               </div>
             </div>
@@ -319,36 +268,25 @@ const MonthYearPicker: React.FC<MonthYearPickerProps> = ({ value, onChange, plac
             {/* Year Dropdown */}
             {showYearDropdown && (
               <>
-                {/* Overlay to close year dropdown when clicking outside */}
                 <div className="fixed inset-0 z-25" onClick={() => setShowYearDropdown(false)} />
                 <div className="relative z-30">
-                  <div className="p-4 border-b border-gray-100">
-                    <div className="grid grid-cols-3 gap-2 max-h-48 overflow-y-auto">
+                  <div className="p-3 border-b border-obsidian-border">
+                    <div className="grid grid-cols-3 gap-1.5 max-h-44 overflow-y-auto scrollbar-thin">
                       {years.map((year) => {
                         const isStartDate = label.toLowerCase().includes('start');
-                        const selectedDate = new Date(year, 0, 1);
-                        let isInvalidYear = false;
-                        
-                        if (isStartDate) {
-                          // Start date: must be <= min(today, end date)
-                          isInvalidYear = !isValidStartDate(selectedDate);
-                        } else {
-                          // End date: must be >= start date and <= today
-                          isInvalidYear = !isValidEndDate(selectedDate);
-                        }
-                        
+                        const isInvalidYear = isStartDate ? !isValidStartDate(new Date(year, 0, 1)) : !isValidEndDate(new Date(year, 0, 1));
                         return (
                           <button
                             key={year}
                             type="button"
                             onClick={() => !isInvalidYear && handleYearSelect(year)}
                             disabled={isInvalidYear}
-                            className={`w-full px-3 py-2 text-sm rounded-md transition-colors flex items-center justify-center ${
-                              year === currentYear 
-                                ? 'bg-blue-600 text-white font-medium' 
+                            className={`w-full px-2 py-1.5 text-xs rounded-md transition-colors flex items-center justify-center ${
+                              year === currentYear
+                                ? 'bg-accent-indigo text-white font-medium'
                                 : isInvalidYear
-                                  ? 'text-gray-400 cursor-not-allowed bg-gray-50'
-                                  : 'text-gray-700 hover:bg-blue-50 hover:text-blue-700'
+                                  ? 'text-ink-muted cursor-not-allowed opacity-40'
+                                  : 'text-ink-secondary hover:bg-accent-indigo/10 hover:text-accent-indigo'
                             }`}
                           >
                             {year}
@@ -356,58 +294,32 @@ const MonthYearPicker: React.FC<MonthYearPickerProps> = ({ value, onChange, plac
                         );
                       })}
                     </div>
-                    <div className="flex gap-2 mt-4">
-                      <button
-                        type="button"
-                        onClick={() => setShowYearDropdown(false)}
-                        className="flex-1 px-3 py-2 text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-md transition-colors"
-                      >
-                        Cancel
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          onChange(`${currentYear}`);
-                          setIsOpen(false);
-                          setShowYearDropdown(false);
-                        }}
-                        className="flex-1 px-3 py-2 text-sm bg-blue-600 text-white rounded-md transition-colors hover:bg-blue-700"
-                      >
-                        Save
-                      </button>
+                    <div className="flex gap-2 mt-3">
+                      <button type="button" onClick={() => setShowYearDropdown(false)} className="flex-1 px-3 py-1.5 text-xs btn-ghost rounded-md">Cancel</button>
+                      <button type="button" onClick={() => { onChange(`${currentYear}`); setIsOpen(false); setShowYearDropdown(false); }} className="flex-1 px-3 py-1.5 text-xs btn-glow rounded-md">Save</button>
                     </div>
                   </div>
                 </div>
               </>
             )}
 
-            {/* Month View - Only show when year dropdown is closed */}
+            {/* Month View */}
             {viewMode === 'month' && !showYearDropdown && (
-              <div className="p-4">
-                <div className="grid grid-cols-3 gap-2 mb-4">
+              <div className="p-3">
+                <div className="grid grid-cols-3 gap-1.5 mb-3">
                   {months.map((month, index) => {
                     const isStartDate = label.toLowerCase().includes('start');
-                    const selectedDate = new Date(currentYear, index, 1);
-                    let isInvalidMonth = false;
-                    
-                    if (isStartDate) {
-                      // Start date: must be <= min(today, end date)
-                      isInvalidMonth = !isValidStartDate(selectedDate);
-                    } else {
-                      // End date: must be >= start date and <= today
-                      isInvalidMonth = !isValidEndDate(selectedDate);
-                    }
-                    
+                    const isInvalidMonth = isStartDate ? !isValidStartDate(new Date(currentYear, index, 1)) : !isValidEndDate(new Date(currentYear, index, 1));
                     return (
                       <button
                         key={index}
                         type="button"
                         onClick={() => !isInvalidMonth && handleMonthSelect(index)}
                         disabled={isInvalidMonth}
-                        className={`px-3 py-3 text-sm font-medium rounded-lg transition-colors border border-transparent flex items-center justify-center min-h-[40px] ${
+                        className={`px-2 py-2 text-xs font-medium rounded-lg transition-colors flex items-center justify-center ${
                           isInvalidMonth
-                            ? 'text-gray-400 cursor-not-allowed bg-gray-50'
-                            : 'text-gray-700 hover:bg-blue-50 hover:text-blue-700 hover:border-blue-200'
+                            ? 'text-ink-muted cursor-not-allowed opacity-40'
+                            : 'text-ink-secondary hover:bg-accent-indigo/10 hover:text-accent-indigo'
                         }`}
                       >
                         {month}
@@ -416,24 +328,15 @@ const MonthYearPicker: React.FC<MonthYearPickerProps> = ({ value, onChange, plac
                   })}
                 </div>
                 <div className="flex gap-2">
-                  <button
-                    type="button"
-                    onClick={() => setIsOpen(false)}
-                    className="flex-1 px-3 py-2 text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-md transition-colors"
-                  >
-                    Cancel
-                  </button>
+                  <button type="button" onClick={() => setIsOpen(false)} className="flex-1 px-3 py-1.5 text-xs btn-ghost rounded-md">Cancel</button>
                   <button
                     type="button"
                     onClick={() => {
-                      // If no month is selected, save only the year
-                      // If month is selected, save year-month
                       const monthToSave = selectedMonth !== null ? String(selectedMonth + 1).padStart(2, '0') : '';
-                      const valueToSave = monthToSave ? `${currentYear}-${monthToSave}` : `${currentYear}`;
-                      onChange(valueToSave);
+                      onChange(monthToSave ? `${currentYear}-${monthToSave}` : `${currentYear}`);
                       setIsOpen(false);
                     }}
-                    className="flex-1 px-3 py-2 text-sm bg-blue-600 text-white rounded-md transition-colors hover:bg-blue-700"
+                    className="flex-1 px-3 py-1.5 text-xs btn-glow rounded-md"
                   >
                     Save
                   </button>
@@ -441,39 +344,25 @@ const MonthYearPicker: React.FC<MonthYearPickerProps> = ({ value, onChange, plac
               </div>
             )}
 
-            {/* Calendar View - Only show when year dropdown is closed */}
+            {/* Calendar View */}
             {viewMode === 'calendar' && !showYearDropdown && (
-              <div className="p-4">
-                
-                {/* Calendar Grid */}
-                <div className="grid grid-cols-7 gap-1">
+              <div className="p-3">
+                <div className="grid grid-cols-7 gap-0.5">
                   {generateCalendarDays().map((day, index) => {
                     const isStartDate = label.toLowerCase().includes('start');
-                    const selectedDate = new Date(currentYear, currentMonth, day.date);
-                    let isInvalidDate = false;
-                    
-                    if (isStartDate) {
-                      // Start date: must be <= min(today, end date)
-                      isInvalidDate = !isValidStartDate(selectedDate);
-                    } else {
-                      // End date: must be >= start date and <= today
-                      isInvalidDate = !isValidEndDate(selectedDate);
-                    }
-                    
+                    const isInvalidDate = isStartDate ? !isValidStartDate(new Date(currentYear, currentMonth, day.date)) : !isValidEndDate(new Date(currentYear, currentMonth, day.date));
                     return (
                       <button
                         key={index}
                         type="button"
                         onClick={() => day.isCurrentMonth && !isInvalidDate && handleDateSelect(day.date)}
                         disabled={!day.isCurrentMonth || isInvalidDate}
-                        className={`w-8 h-8 text-sm rounded-md transition-colors flex items-center justify-center ${
-                          day.isCurrentMonth && !isInvalidDate
-                            ? 'text-gray-900 hover:bg-blue-50 hover:text-blue-700'
-                            : 'text-gray-300 cursor-not-allowed'
-                        } ${
-                          day.isToday ? 'bg-blue-100 text-blue-700 font-medium' : ''
-                        } ${
-                          isInvalidDate ? 'opacity-50' : ''
+                        className={`w-8 h-7 text-xs rounded transition-colors flex items-center justify-center ${
+                          !day.isCurrentMonth || isInvalidDate
+                            ? 'text-ink-muted/30 cursor-not-allowed'
+                            : day.isToday
+                              ? 'bg-accent-indigo/20 text-accent-indigo font-medium'
+                              : 'text-ink-secondary hover:bg-accent-indigo/10 hover:text-accent-indigo'
                         }`}
                       >
                         {day.date}
@@ -481,26 +370,12 @@ const MonthYearPicker: React.FC<MonthYearPickerProps> = ({ value, onChange, plac
                     );
                   })}
                 </div>
-                
-                <div className="flex gap-2 mt-4">
+                <div className="flex gap-2 mt-3">
+                  <button type="button" onClick={() => setIsOpen(false)} className="flex-1 px-3 py-1.5 text-xs btn-ghost rounded-md">Cancel</button>
                   <button
                     type="button"
-                    onClick={() => setIsOpen(false)}
-                    className="flex-1 px-3 py-2 text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-md transition-colors"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      // In calendar view, we always have year and month selected
-                      // Save as year-month since no specific date was chosen
-                      const year = currentYear;
-                      const month = String(currentMonth + 1).padStart(2, '0');
-                      onChange(`${year}-${month}`);
-                      setIsOpen(false);
-                    }}
-                    className="flex-1 px-3 py-2 text-sm bg-blue-600 text-white rounded-md transition-colors hover:bg-blue-700"
+                    onClick={() => { onChange(`${currentYear}-${String(currentMonth + 1).padStart(2, '0')}`); setIsOpen(false); }}
+                    className="flex-1 px-3 py-1.5 text-xs btn-glow rounded-md"
                   >
                     Save
                   </button>

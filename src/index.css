@@ -2,45 +2,186 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
 
 :root {
-  --primary-purple: #6366f1;
-  --primary-pink: #ec4899;
-  --primary-blue: #3b82f6;
-  --primary-orange: #f97316;
-  --primary-green: #10b981;
-  --dark-purple: #4c1d95;
-  --dark-blue: #1e3a8a;
+  --obsidian-bg: #080810;
+  --obsidian-surface: #0f0f1a;
+  --obsidian-card: #161625;
+  --obsidian-border: #1e1e35;
+  --accent-indigo: #6366f1;
+  --accent-cyan: #22d3ee;
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   margin: 0;
-  font-family: 'Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  background-color: var(--obsidian-bg);
+  color: var(--text-primary);
+  font-family: 'Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* ── Obsidian section base ── */
 @layer utilities {
+  .section-obsidian {
+    background-color: var(--obsidian-bg);
+  }
+
+  .section-surface {
+    background-color: var(--obsidian-surface);
+  }
+
+  /* Keep legacy gradient utilities for any unmigrated components */
   .gradient-purple-pink {
-    background: linear-gradient(135deg, var(--primary-purple), var(--primary-pink));
+    background: linear-gradient(135deg, #6366f1, #ec4899);
   }
-
   .gradient-orange-pink {
-    background: linear-gradient(135deg, var(--primary-orange), var(--primary-pink));
+    background: linear-gradient(135deg, #f97316, #ec4899);
   }
-
   .gradient-blue-purple {
-    background: linear-gradient(135deg, var(--primary-blue), var(--primary-purple));
+    background: linear-gradient(135deg, #3b82f6, #6366f1);
   }
-
   .gradient-orange-yellow {
-    background: linear-gradient(135deg, var(--primary-orange), #fbbf24);
+    background: linear-gradient(135deg, #f97316, #fbbf24);
+  }
+  .gradient-pink-orange {
+    background: linear-gradient(135deg, #ec4899, #f97316);
   }
 
-  .gradient-pink-orange {
-    background: linear-gradient(135deg, var(--primary-pink), var(--primary-orange));
+  /* Dark card with glow-on-hover */
+  .obs-card {
+    background-color: var(--obsidian-card);
+    border: 1px solid rgba(99, 102, 241, 0.15);
+    border-radius: 0.75rem;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
   }
+  .obs-card:hover {
+    border-color: rgba(99, 102, 241, 0.5);
+    box-shadow: 0 0 24px rgba(99, 102, 241, 0.2), 0 8px 32px rgba(0, 0, 0, 0.4);
+  }
+
+  /* Accent tag / chip */
+  .obs-tag {
+    background-color: rgba(99, 102, 241, 0.1);
+    color: #a5b4fc;
+    border: 1px solid rgba(99, 102, 241, 0.3);
+    border-radius: 9999px;
+    padding: 0.2rem 0.75rem;
+    font-size: 0.8rem;
+    font-weight: 500;
+    white-space: nowrap;
+    transition: background-color 0.2s, border-color 0.2s;
+  }
+  .obs-tag:hover {
+    background-color: rgba(99, 102, 241, 0.2);
+    border-color: rgba(99, 102, 241, 0.5);
+  }
+
+  /* Animated progress bar */
+  .obs-progress-track {
+    background-color: rgba(99, 102, 241, 0.12);
+    border-radius: 9999px;
+    height: 6px;
+    overflow: hidden;
+  }
+  .obs-progress-fill {
+    height: 100%;
+    border-radius: 9999px;
+    background: linear-gradient(90deg, var(--accent-indigo), var(--accent-cyan));
+    transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Glow button */
+  .btn-glow {
+    background: linear-gradient(135deg, var(--accent-indigo), #4f46e5);
+    color: #fff;
+    font-weight: 600;
+    border: none;
+    border-radius: 0.5rem;
+    padding: 0.6rem 1.4rem;
+    cursor: pointer;
+    transition: box-shadow 0.3s ease, transform 0.2s ease, background 0.2s;
+  }
+  .btn-glow:hover {
+    box-shadow: 0 0 20px rgba(99, 102, 241, 0.5);
+    transform: translateY(-1px);
+  }
+
+  /* Ghost / outline button */
+  .btn-ghost {
+    background: transparent;
+    color: var(--text-secondary);
+    border: 1px solid var(--obsidian-border);
+    border-radius: 0.5rem;
+    padding: 0.6rem 1.4rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s, background 0.2s;
+  }
+  .btn-ghost:hover {
+    border-color: rgba(99, 102, 241, 0.5);
+    color: var(--text-primary);
+    background: rgba(99, 102, 241, 0.08);
+  }
+
+  /* Scroll-triggered reveal */
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Hexagonal avatar clip */
+  .hex-avatar {
+    clip-path: polygon(50% 0%, 93% 25%, 93% 75%, 50% 100%, 7% 75%, 7% 25%);
+  }
+}
+
+/* ── Floating dot grid for hero ── */
+.dots-grid {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.dots-grid::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(99,102,241,0.25) 1px, transparent 1px);
+  background-size: 40px 40px;
+  mask-image: radial-gradient(ellipse at 60% 40%, black 20%, transparent 70%);
+  -webkit-mask-image: radial-gradient(ellipse at 60% 40%, black 20%, transparent 70%);
+  animation: dotsDrift 20s linear infinite;
+}
+@keyframes dotsDrift {
+  0%   { background-position: 0 0; }
+  100% { background-position: 40px 40px; }
+}
+
+/* ── Navbar glass effect ── */
+.nav-glass {
+  background-color: rgba(15, 15, 26, 0.9);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(99, 102, 241, 0.2);
+}
+.nav-transparent {
+  background-color: transparent;
+  border-bottom: 1px solid transparent;
+  transition: background-color 0.4s ease, border-color 0.4s ease, backdrop-filter 0.4s ease;
 }
 
 /* Custom date input styling */
@@ -56,124 +197,33 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   top: 0;
   width: auto;
 }
-
-input[type="date"]::-webkit-datetime-edit-fields-wrapper {
-  padding: 0;
-}
-
-input[type="date"]::-webkit-datetime-edit {
-  padding: 0;
-}
-
+input[type="date"]::-webkit-datetime-edit-fields-wrapper { padding: 0; }
+input[type="date"]::-webkit-datetime-edit { padding: 0; }
 input[type="date"]::-webkit-datetime-edit-year-field,
 input[type="date"]::-webkit-datetime-edit-month-field,
-input[type="date"]::-webkit-datetime-edit-day-field {
-  padding: 0;
-}
+input[type="date"]::-webkit-datetime-edit-day-field { padding: 0; }
 
-/* Custom line-clamp utilities */
-.line-clamp-1 {
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 1;
-}
+/* line-clamp */
+.line-clamp-1 { overflow: hidden; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 1; }
+.line-clamp-2 { overflow: hidden; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+.line-clamp-3 { overflow: hidden; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; }
 
-.line-clamp-2 {
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-}
-
-.line-clamp-3 {
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3;
-}
-
-/* Hide navigation when showing error pages */
+/* Hide nav on error pages */
 body.hide-navigation header,
 body.hide-navigation nav,
-body.hide-navigation .navbar {
-  display: none !important;
-}
+body.hide-navigation .navbar { display: none !important; }
+body.hide-navigation footer { display: none !important; }
 
-body.hide-navigation footer {
-  display: none !important;
-}
-
-/* Custom Scrollbar Styles - Enhanced with smooth scrolling */
+/* Scrollbar */
 .scrollbar-thin {
-  scrollbar-width: thin; /* Firefox - thin scrollbar */
-  -ms-overflow-style: none; /* IE and Edge */
-  scroll-behavior: smooth; /* Smooth scrolling */
-}
-
-.scrollbar-thin::-webkit-scrollbar {
-  width: 8px; /* Slightly wider for better visibility */
-  background: transparent;
-}
-
-.scrollbar-thin::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.05); /* Subtle track */
-  border-radius: 10px;
-  margin: 4px 0; /* Add some margin */
-}
-
-.scrollbar-thin::-webkit-scrollbar-thumb {
-  background: transparent; /* Hidden by default */
-  border-radius: 10px;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* Smooth easing */
-  border: 1px solid transparent; /* For better definition */
-}
-
-.scrollbar-thin:hover::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.3); /* Visible on hover */
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.scrollbar-thin::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.5);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  transform: scaleX(1.1); /* Slight scale on hover */
-}
-
-.scrollbar-thin::-webkit-scrollbar-thumb:active {
-  background: rgba(255, 255, 255, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-}
-
-/* Firefox scrollbar - enhanced */
-.scrollbar-thin {
-  scrollbar-color: transparent transparent;
-}
-
-.scrollbar-thin:hover {
-  scrollbar-color: rgba(255, 255, 255, 0.3) rgba(255, 255, 255, 0.05);
-}
-
-/* Smooth scroll behavior for all scrollable elements */
-.scroll-smooth {
+  scrollbar-width: thin;
+  -ms-overflow-style: none;
   scroll-behavior: smooth;
 }
-
-/* Custom scrollbar for different states */
-.scrollbar-thin.scrollbar-auto {
-  scrollbar-width: auto;
-}
-
-.scrollbar-thin.scrollbar-auto::-webkit-scrollbar {
-  width: 12px;
-}
-
-/* Fade-in effect for scrollbars */
-.scrollbar-fade {
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.scrollbar-fade:hover {
-  opacity: 1;
-}
+.scrollbar-thin::-webkit-scrollbar { width: 6px; background: transparent; }
+.scrollbar-thin::-webkit-scrollbar-track { background: rgba(99,102,241,0.05); border-radius: 10px; }
+.scrollbar-thin::-webkit-scrollbar-thumb { background: transparent; border-radius: 10px; transition: background 0.3s; }
+.scrollbar-thin:hover::-webkit-scrollbar-thumb { background: rgba(99,102,241,0.3); }
+.scrollbar-thin::-webkit-scrollbar-thumb:hover { background: rgba(99,102,241,0.5); }
+.scrollbar-thin { scrollbar-color: transparent transparent; }
+.scrollbar-thin:hover { scrollbar-color: rgba(99,102,241,0.3) rgba(99,102,241,0.05); }

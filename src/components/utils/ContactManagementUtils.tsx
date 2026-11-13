@@ -52,20 +52,17 @@ const formatDate = (dateString?: string) => {
     }
 };
 
-const normalizeMessage = (incoming: any): Message => {
+const normalizeMessage = (incoming: any): Message | null => {
     const messageId = incoming._id ?? incoming.id ?? incoming.messageId;
-    // conversationId is required - if missing, throw error or generate a fallback
     if (!incoming.conversationId) {
-        console.error('Message missing required conversationId:', incoming);
-        // For backward compatibility with old messages, generate a temporary conversationId
-        // In production, all messages should have conversationId
-        throw new Error('Message is missing required conversationId');
+        console.error('Message missing required conversationId, skipping:', incoming);
+        return null;
     }
     return {
         ...incoming,
         _id: messageId,
         id: messageId,
-        conversationId: incoming.conversationId,  // Required field
+        conversationId: incoming.conversationId,
         isRead: incoming.isRead ?? incoming.read ?? false,
         read: incoming.isRead ?? incoming.read ?? false,
         senderUserId: incoming.senderUserId,
@@ -108,10 +105,17 @@ const groupMessage = (messages: Message[]) => {
         }
     });
 
-    groupedMessages.sort((a, b) => 
-        new Date(b.latestMessage.created_at || '').getTime() - 
+    groupedMessages.sort((a, b) =>
+        new Date(b.latestMessage.created_at || '').getTime() -
         new Date(a.latestMessage.created_at || '').getTime()
     );
+
+    // Sort messages within each conversation chronologically
+    groupedMessages.forEach(group => {
+        group.messages.sort((a, b) =>
+            new Date(a.created_at || '').getTime() - new Date(b.created_at || '').getTime()
+        );
+    });
 
     return groupedMessages;
 };

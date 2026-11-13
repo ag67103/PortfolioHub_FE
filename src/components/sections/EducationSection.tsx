@@ -8,37 +8,31 @@ import { EducationAddEditForm } from "../forms/EducationForms";
 import DeleteConfirmationModal from "../forms/DeleteConfirmationModal";
 
 const getEducationDuration = (startDate: string, endDate: string) => {
-    if (startDate && endDate) {
-        return `${new Date(startDate).getFullYear()} - ${new Date(endDate).getFullYear()}`;
-    } else if (startDate) {
-        return `${new Date(startDate).getFullYear()}`;
-    } else {
-        return 'Present';
-    }
+    if (startDate && endDate) return `${new Date(startDate).getFullYear()} — ${new Date(endDate).getFullYear()}`;
+    if (startDate) return `${new Date(startDate).getFullYear()}`;
+    return 'Present';
 };
 
 const EducationSection = () => {
-    const { isAuthenticated } = useAuth();
+    const { isMe } = useAuth();
     const { educations } = usePortfolio();
     const [selectedEducation, setSelectedEducation] = useState<Education | null>(null);
     const [showAddForm, setShowAddForm] = useState(false);
     const [showEditForm, setShowEditForm] = useState(false);
     const [showDeleteConfirmationModal, setShowDeleteConfirmationModal] = useState(false);
-    
+
     return (
-        <section id='education' className='gradient-blue-purple py-20'>
+        <section id='education' className='section-obsidian py-20'>
             {showAddForm && (
                 <ModalOverlay onClose={() => setShowAddForm(false)}>
                     <EducationAddEditForm isAdd={true} setShowForm={setShowAddForm} />
                 </ModalOverlay>
             )}
-            
             {showEditForm && (
                 <ModalOverlay onClose={() => setShowEditForm(false)}>
                     <EducationAddEditForm isAdd={false} setShowForm={setShowEditForm} selectedEducation={selectedEducation} />
                 </ModalOverlay>
             )}
-            
             {showDeleteConfirmationModal && (
                 <ModalOverlay onClose={() => setShowDeleteConfirmationModal(false)}>
                     <DeleteConfirmationModal
@@ -49,108 +43,96 @@ const EducationSection = () => {
                     />
                 </ModalOverlay>
             )}
-            
-            <div className="container mx-auto px-4">
-                <h2 className="text-4xl font-bold text-white mb-12 text-center">Education</h2>
-                <div className="w-full">
-                    {isAuthenticated && educations && educations.length > 0 && (
-                        <div className="mb-8 text-center">
-                            <button 
-                                className="px-6 py-2 bg-white/20 backdrop-blur-sm text-white rounded-lg font-semibold hover:bg-white/30 transition-colors mb-4 border border-white/30"
-                                onClick={() => setShowAddForm(true)}
-                            >
-                                Add Education
-                            </button>
-                        </div>
+
+            <div className="container mx-auto px-4 lg:px-8">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-12 gap-4">
+                    <div>
+                        <h2 className="font-grotesk text-4xl font-bold text-ink-primary">Academic Background</h2>
+                    </div>
+                    {isMe && educations && educations.length > 0 && (
+                        <button className="btn-glow px-5 py-2.5 rounded-lg text-sm self-start sm:self-auto" onClick={() => setShowAddForm(true)}>
+                            + Add Education
+                        </button>
                     )}
-                    {educations && educations.length > 0 ? (
-                        <div className="w-full space-y-8">
-                            {educations.map((education: any, index: number) => (
-                                <div 
-                                    key={education.id || education._id || `edu-${index}`}
-                                    className="bg-white/20 rounded-2xl p-8 backdrop-blur-sm border border-white/30 relative group"
-                                >
-                                    {isAuthenticated && (
-                                        <div className="absolute top-4 right-4 flex gap-2">
-                                            <button 
-                                                className="p-2 text-white/60 hover:text-white/90 hover:bg-white/20 rounded-full transition-colors opacity-0 group-hover:opacity-100"
-                                                onClick={() => {
-                                                    setSelectedEducation(education);
-                                                    setShowEditForm(true);
-                                                }}
-                                            >
-                                                <Edit2 size={16} />
-                                            </button>
-                                            <button 
-                                                className="p-2 text-white/60 hover:text-white/90 hover:bg-white/20 rounded-full transition-colors opacity-0 group-hover:opacity-100"
-                                                onClick={() => {
-                                                    setSelectedEducation(education);
-                                                    setShowDeleteConfirmationModal(true);
-                                                }}
-                                            >
-                                                <Trash2 size={16} />
-                                            </button>
-                                        </div>
-                                    )}
-                                    <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
+                </div>
+
+                {educations && educations.length > 0 ? (
+                    <div className="space-y-6">
+                        {educations.map((education: any, index: number) => (
+                            <div
+                                key={education.id || education._id || `edu-${index}`}
+                                className="obs-card p-6 relative group"
+                            >
+                                {isMe && (
+                                    <div className="absolute top-5 right-5 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <button
+                                            className="p-2 text-ink-muted hover:text-ink-primary hover:bg-obsidian-border rounded-lg transition-colors"
+                                            onClick={() => { setSelectedEducation(education); setShowEditForm(true); }}
+                                        >
+                                            <Edit2 size={14} />
+                                        </button>
+                                        <button
+                                            className="p-2 text-ink-muted hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
+                                            onClick={() => { setSelectedEducation(education); setShowDeleteConfirmationModal(true); }}
+                                        >
+                                            <Trash2 size={14} />
+                                        </button>
+                                    </div>
+                                )}
+
+                                <div className="flex items-center gap-3 mb-4">
+                                    <div className="p-2 bg-accent-indigo/10 border border-accent-indigo/20 rounded-lg shrink-0">
+                                        <GraduationCap className="w-5 h-5 text-accent-indigo" />
+                                    </div>
+                                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between w-full gap-2">
                                         <div>
-                                            <h3 className="text-2xl font-bold text-white mb-2">{education.degree}</h3>
-                                            <p className="text-xl text-white/90 mb-2">{education.institution}</p>
+                                            <h3 className="font-grotesk text-lg font-bold text-ink-primary">{education.degree}</h3>
+                                            <p className="text-accent-indigo font-medium text-sm">{education.institution}</p>
                                         </div>
-                                        
-                                        <span className="text-lg text-white/80 bg-white/20 px-4 py-2 rounded-full border border-white/30">
+                                        <span className="text-xs font-medium text-ink-muted bg-obsidian-surface border border-obsidian-border px-3 py-1.5 rounded-full whitespace-nowrap self-start sm:self-auto">
                                             {getEducationDuration(education.start_date, education.end_date)}
                                         </span>
                                     </div>
+                                </div>
 
-                                    <ul className="list-disc list-outside space-y-2 text-white/90 mb-4 ml-6">
+                                {education.description && (
+                                    <ul className="space-y-1.5 text-ink-secondary mb-4 ml-4 list-disc list-outside text-sm">
                                         {education.description
                                             .split('\n')
-                                            .filter((line: string) => line.trim() !== '')
-                                            .map((desc: string, index: number) => (
-                                                <li key={index} className="leading-relaxed pl-2">
-                                                    {desc}
-                                                </li>
+                                            .filter((line: string) => line.trim())
+                                            .map((desc: string, i: number) => (
+                                                <li key={i} className="leading-relaxed pl-1">{desc}</li>
                                             ))
                                         }
                                     </ul>
+                                )}
 
-                                    {education.technologies && education.technologies.length > 0 && (
-                                        <div className="flex flex-wrap gap-2">
-                                            {education.technologies.map((technology: any, techIndex: number) => (
-                                                <span key={`${education.id || education._id || 'edu'}-tech-${techIndex}`} className="text-white/80 bg-white/20 px-3 py-1 rounded-full border border-white/30">{technology}</span>
-                                            ))}
-                                        </div>
-                                    )}
-                                </div>
-                            ))}
-                        </div>
-                    ) : (
-                        <div className="bg-white/20 rounded-3xl p-10 backdrop-blur-sm border border-white/30 text-center max-w-3xl mx-auto relative overflow-hidden">
-                            <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-white/5 opacity-50"></div>
-                            <div className="relative z-10">
-                                <div className="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-br from-white/30 to-white/10 rounded-full mb-6 shadow-lg border-2 border-white/40">
-                                    <GraduationCap className="w-12 h-12 text-white" />
-                                </div>
-                                <h3 className="text-2xl font-bold text-white mb-3">No Education Added Yet</h3>
-                                <p className="text-white/90 text-base mb-6 leading-relaxed max-w-xl mx-auto">
-                                    {isAuthenticated 
-                                        ? "Highlight your academic achievements! Add your educational background and qualifications to showcase your learning journey."
-                                        : "Education will be displayed here once it is added to the portfolio."
-                                    }
-                                </p>
-                                {isAuthenticated && (
-                                    <button
-                                        className="px-8 py-3 bg-gradient-to-r from-white/30 to-white/20 backdrop-blur-sm text-white rounded-xl font-semibold hover:from-white/40 hover:to-white/30 transition-all duration-300 border border-white/40 shadow-lg hover:shadow-xl hover:scale-105 text-base"
-                                        onClick={() => setShowAddForm(true)}
-                                    >
-                                        Add Your First Education
-                                    </button>
+                                {education.technologies?.length > 0 && (
+                                    <div className="flex flex-wrap gap-2">
+                                        {education.technologies.map((tech: any, i: number) => (
+                                            <span key={`edu-t-${i}`} className="obs-tag">{tech}</span>
+                                        ))}
+                                    </div>
                                 )}
                             </div>
+                        ))}
+                    </div>
+                ) : (
+                    <div className="obs-card p-12 text-center max-w-lg mx-auto">
+                        <div className="inline-flex items-center justify-center w-14 h-14 bg-accent-indigo/10 border border-accent-indigo/30 rounded-2xl mb-5">
+                            <GraduationCap className="w-7 h-7 text-accent-indigo" />
                         </div>
-                    )}
-                </div>
+                        <h3 className="font-grotesk text-xl font-bold text-ink-primary mb-2">No Education Added Yet</h3>
+                        <p className="text-ink-secondary mb-6 text-sm leading-relaxed">
+                            {isMe ? 'Highlight your academic journey by adding your education.' : 'Education will appear here once added.'}
+                        </p>
+                        {isMe && (
+                            <button className="btn-glow px-6 py-2.5 rounded-lg text-sm" onClick={() => setShowAddForm(true)}>
+                                Add Your First Education
+                            </button>
+                        )}
+                    </div>
+                )}
             </div>
         </section>
     );

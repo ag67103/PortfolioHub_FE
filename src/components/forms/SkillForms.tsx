@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { usePortfolio } from "../../context/PortfolioContext";
 import { Skill } from "../../services/modal";
-import { addSkill, deleteSkill, updateSkill } from "../../services/api";
-import { Trash2, X } from "lucide-react";
+import { addSkill, updateSkill } from "../../services/api";
+import { Code } from "lucide-react";
 
 interface AddEditSkillFormProps {
     isAdd: boolean;
@@ -14,9 +14,8 @@ const AddEditSkillForm: React.FC<AddEditSkillFormProps> = ({ isAdd, selectedSkil
     const [skill, setSkill] = useState({
         name: selectedSkill?.name ?? '',
         category: selectedSkill?.category ?? '',
-        proficiency: selectedSkill?.proficiency ?? 0
+        proficiency: selectedSkill?.proficiency ?? 0,
     });
-
     const [loading, setLoading] = useState(false);
     const [isSubmitActive, setIsSubmitActive] = useState(false);
     const [error, setError] = useState('');
@@ -37,12 +36,8 @@ const AddEditSkillForm: React.FC<AddEditSkillFormProps> = ({ isAdd, selectedSkil
         try {
             setLoading(true);
             e.preventDefault();
-
             const response = isAdd ? await addSkill(skill) : await updateSkill(selectedSkill?._id ?? '', skill);
-            if (response.status_code === 400) {
-                throw new Error(response.message ?? 'Failed to add skill');
-            }
-            
+            if (response.status_code === 400) throw new Error(response.message ?? 'Failed to save skill');
             setShowForm(false);
             setIsSkillLoading(true);
         } catch (error: any) {
@@ -50,66 +45,75 @@ const AddEditSkillForm: React.FC<AddEditSkillFormProps> = ({ isAdd, selectedSkil
         } finally {
             setLoading(false);
         }
-    }
-    
+    };
+
+    const inputCls = "w-full px-4 py-2.5 rounded-lg border border-obsidian-border bg-obsidian-surface text-ink-primary placeholder-ink-muted focus:outline-none focus:border-accent-indigo/50 focus:ring-1 focus:ring-accent-indigo/30 transition-colors text-sm";
+    const labelCls = "block text-sm font-medium text-ink-secondary mb-1.5";
+
     return (
-        <form 
-            className="space-y-4 max-w-md"
-            onSubmit={handleSubmit}
-        >
-            <input 
-                type="text"
-                name="skillName"
-                placeholder="Skill Name"
-                className="w-full px-4 py-2 rounded border"
-                value={skill.name}
-                onChange={e => setSkill(s => ({ ...s, name: e.target.value }))}
-                required
-            />
-            <input 
-                type="text"
-                name="category"
-                placeholder="Category"
-                className="w-full px-4 py-2 rounded border"
-                value={skill.category}
-                onChange={e => setSkill(s => ({ ...s, category: e.target.value }))}
-                required
-            />
-            <div>
-                <label className="block mb-1">Proficiency: {skill.proficiency}%</label>
-                <input 
-                    type="range"
-                    min={0}
-                    max={100}
-                    value={skill.proficiency}
-                    onChange={e => setSkill(s => ({ ...s, proficiency: Number(e.target.value) }))}
-                    className="w-full"
-                />
+        <div className="w-full">
+            <div className="flex items-center gap-3 mb-6">
+                <div className="p-2 bg-accent-indigo/10 border border-accent-indigo/20 rounded-xl">
+                    <Code className="w-5 h-5 text-accent-indigo" />
+                </div>
+                <h2 className="font-grotesk text-xl font-bold text-ink-primary">{isAdd ? 'Add Skill' : 'Edit Skill'}</h2>
             </div>
-            {error && <div className="text-red-600 text-sm">{error}</div>}
-            <div className="flex gap-2">
-                <button 
-                    type="submit" 
-                    className="flex-1 bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors disabled:opacity-60"
-                    disabled={!isSubmitActive}
-                >
-                    {isAdd ? 
-                        (loading ? 'Adding...' : 'Add Skill') 
-                        : 
-                        (loading ? 'Updating...' : 'Update Skill')
-                    }
-                </button>
-                <button 
-                    type="button"
-                    className="flex-1 bg-gray-200 text-gray-700 py-2 rounded-lg font-semibold hover:bg-gray-300 transition-colors"
-                    disabled={loading}
-                    onClick={() => setShowForm(false)}
-                >
-                    Cancel
-                </button>
-            </div>
-        </form>
-    )
-}
+
+            <form onSubmit={handleSubmit} className="space-y-4">
+                <div>
+                    <label className={labelCls}>Skill Name <span className="text-red-400">*</span></label>
+                    <input
+                        type="text"
+                        placeholder="e.g., React, Python, Docker"
+                        className={inputCls}
+                        value={skill.name}
+                        onChange={e => setSkill(s => ({ ...s, name: e.target.value }))}
+                        required
+                    />
+                </div>
+
+                <div>
+                    <label className={labelCls}>Category <span className="text-red-400">*</span></label>
+                    <input
+                        type="text"
+                        placeholder="e.g., Frontend, Backend, DevOps"
+                        className={inputCls}
+                        value={skill.category}
+                        onChange={e => setSkill(s => ({ ...s, category: e.target.value }))}
+                        required
+                    />
+                </div>
+
+                <div>
+                    <label className={labelCls}>Proficiency: <span className="text-accent-indigo font-semibold">{skill.proficiency}%</span></label>
+                    <div className="mt-2">
+                        <input
+                            type="range"
+                            min={0}
+                            max={100}
+                            value={skill.proficiency}
+                            onChange={e => setSkill(s => ({ ...s, proficiency: Number(e.target.value) }))}
+                            className="w-full accent-indigo-500"
+                        />
+                        <div className="obs-progress-track mt-2">
+                            <div className="obs-progress-fill" style={{ width: `${skill.proficiency}%` }} />
+                        </div>
+                    </div>
+                </div>
+
+                {error && <div className="p-3 bg-red-500/10 border border-red-500/30 rounded-lg text-sm text-red-400">{error}</div>}
+
+                <div className="flex gap-3 pt-2">
+                    <button type="submit" className="btn-glow flex-1 py-2.5 rounded-lg text-sm" disabled={!isSubmitActive || loading}>
+                        {loading ? 'Saving...' : isAdd ? 'Add Skill' : 'Update Skill'}
+                    </button>
+                    <button type="button" className="btn-ghost flex-1 py-2.5 rounded-lg text-sm" disabled={loading} onClick={() => setShowForm(false)}>
+                        Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    );
+};
 
 export { AddEditSkillForm };

@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { register } from '../services/api';
-import { useAuth } from '../context/AuthContext';
+import { register, login } from '../services/api';
 
 
 const RegisterForm: React.FC = () => {
@@ -21,24 +20,27 @@ const RegisterForm: React.FC = () => {
             setLoading(true);
             e.preventDefault();
 
+            if (user.password !== user.confirmPassword) {
+                throw new Error('Passwords do not match');
+            }
+
             const userData = {
                 ...user,
                 username: user.email,
             }
 
-            const response = await register(userData);
-            if (response.status_code === 400) {
-                throw new Error(response.message ?? 'Registration failed');
-            }
+            await register(userData);
 
-            if (response.access_token) {
-                localStorage.setItem('access_token', response.access_token);
+            // Auto-login after successful registration
+            const tokenResponse = await login(user.email, user.password);
+            if (tokenResponse.access_token) {
+                localStorage.setItem('access_token', tokenResponse.access_token);
                 window.location.href = '/';
-                
             }
         } catch (error: any) {
-            setError(error.message ?? 'Registration failed');
-        } 
+            const serverMessage = error.response?.data?.detail?.message || error.response?.data?.detail || error.response?.data?.message;
+            setError(serverMessage || error.message || 'Registration failed');
+        }
         finally {
             setLoading(false);
         }
@@ -46,6 +48,9 @@ const RegisterForm: React.FC = () => {
 
     return (
         <form onSubmit={handleSubmit} className="space-y-6">
+            {error && (
+                <div className="p-3 bg-red-500/10 border border-red-500/30 rounded-lg text-sm text-red-400">{error}</div>
+            )}
             <input
                 type="email"
                 placeholder="Email"

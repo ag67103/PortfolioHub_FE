@@ -14,7 +14,10 @@ const api = axios.create({
 // Helper function to decode JWT token and check expiry
 const isTokenExpiringSoon = (token: string): boolean => {
     try {
-        const payload = JSON.parse(atob(token.split('.')[1]));
+        // JWT uses base64url (RFC 4648 §5); atob() requires standard base64
+        const base64url = token.split('.')[1];
+        const base64 = base64url.replace(/-/g, '+').replace(/_/g, '/');
+        const payload = JSON.parse(atob(base64));
         const exp = payload.exp * 1000; // Convert to milliseconds
         const now = Date.now();
         const timeUntilExpiry = exp - now;
@@ -148,7 +151,7 @@ export const login = async (username: string, password: string) => {
 
     try {
         const response = await api.post(
-            `${getApiBaseUrl()}/auth/token`,
+            `/auth/token`,
             params,
             {
                 headers: {
@@ -273,7 +276,8 @@ export const addSkill = async(skill: Skill): Promise<Skill> => {
         const response = await authenticatedApi(token).post('/skills', skill);
         return response.data;
     } catch (error: any) {
-        return error.response.data.detail;
+        const serverMessage = error.response?.data?.detail?.message || error.response?.data?.detail;
+        throw new Error(serverMessage || 'Failed to add skill. Please try again.');
     }
 }
 
@@ -289,7 +293,8 @@ export const updateSkill = async(skillId: string, skill: Skill): Promise<Skill> 
         const response = await authenticatedApi(token).put(`/skills/${skillId}`, skill);
         return response.data;
     } catch (error: any) {
-        throw new Error('Failed to update skill. Please try again.');
+        const serverMessage = error.response?.data?.detail?.message || error.response?.data?.detail;
+        throw new Error(serverMessage || 'Failed to update skill. Please try again.');
     }
 }
 
@@ -333,7 +338,8 @@ export const addProject = async(project: Project): Promise<Project> => {
         const response = await authenticatedApi(token).post('/projects', project);
         return response.data;
     } catch (error: any) {
-        throw new Error('Failed to add project. Please try again.');
+        const serverMessage = error.response?.data?.detail?.message || error.response?.data?.detail;
+        throw new Error(serverMessage || 'Failed to add project. Please try again.');
     }
 }
 
@@ -349,7 +355,8 @@ export const updateProject = async(projectId: string, project: Project): Promise
         const response = await authenticatedApi(token).put(`/projects/${projectId}`, project);
         return response.data;
     } catch (error: any) {
-        throw new Error('Failed to update project. Please try again.');
+        const serverMessage = error.response?.data?.detail?.message || error.response?.data?.detail;
+        throw new Error(serverMessage || 'Failed to update project. Please try again.');
     }
 }
 
@@ -393,7 +400,8 @@ export const addExperience = async(experience: Experience): Promise<Experience> 
         const response = await authenticatedApi(token).post('/experiences', experience);
         return response.data;
     } catch (error: any) {
-        throw new Error('Failed to add experience. Please try again.');
+        const serverMessage = error.response?.data?.detail?.message || error.response?.data?.detail;
+        throw new Error(serverMessage || 'Failed to add experience. Please try again.');
     }
 }
 
@@ -409,7 +417,8 @@ export const updateExperience = async(experienceId: string, experience: Experien
         const response = await authenticatedApi(token).put(`/experiences/${experienceId}`, experience);
         return response.data;
     } catch (error: any) {
-        throw new Error('Failed to update experience. Please try again.');
+        const serverMessage = error.response?.data?.detail?.message || error.response?.data?.detail;
+        throw new Error(serverMessage || 'Failed to update experience. Please try again.');
     }
 }
 
@@ -453,7 +462,8 @@ export const addEducation = async(education: Education): Promise<Education> => {
         const response = await authenticatedApi(token).post('/educations', education);
         return response.data;
     } catch(error: any) {
-        throw new Error('Failed to add education. Please try again.');
+        const serverMessage = error.response?.data?.detail?.message || error.response?.data?.detail;
+        throw new Error(serverMessage || 'Failed to add education. Please try again.');
     }
 }
 
@@ -469,7 +479,8 @@ export const updateEducation = async(educationId: string, education: Education):
         const response = await authenticatedApi(token).put(`/educations/${educationId}`, education);
         return response.data;
     } catch(error: any) {
-        throw new Error('Failed to update education. Please try again.');
+        const serverMessage = error.response?.data?.detail?.message || error.response?.data?.detail;
+        throw new Error(serverMessage || 'Failed to update education. Please try again.');
     }
 }
 
@@ -513,7 +524,8 @@ export const addCertification = async(certification: Certification): Promise<Cer
         const response = await authenticatedApi(token).post('/certifications', certification);
         return response.data;
     } catch(error: any) {
-        throw new Error('Failed to add certification. Please try again.');
+        const serverMessage = error.response?.data?.detail?.message || error.response?.data?.detail;
+        throw new Error(serverMessage || 'Failed to add certification. Please try again.');
     }
 }
 
@@ -529,7 +541,8 @@ export const updateCertification = async(certificationId: string, certification:
         const response = await authenticatedApi(token).put(`/certifications/${certificationId}`, certification);
         return response.data;
     } catch(error: any) {
-        throw new Error('Failed to update certification. Please try again.');
+        const serverMessage = error.response?.data?.detail?.message || error.response?.data?.detail;
+        throw new Error(serverMessage || 'Failed to update certification. Please try again.');
     }
 }
 
@@ -573,7 +586,8 @@ export const addAward = async(award: Omit<Award, 'id' | 'created_at' | 'updated_
         const response = await authenticatedApi(token).post('/awards', award);
         return response.data;
     } catch(error: any) {
-        throw new Error('Failed to add award. Please try again.');
+        const serverMessage = error.response?.data?.detail?.message || error.response?.data?.detail;
+        throw new Error(serverMessage || 'Failed to add award. Please try again.');
     }
 }
 
@@ -589,7 +603,8 @@ export const updateAward = async(awardId: string, award: Award): Promise<Award> 
         const response = await authenticatedApi(token).put(`/awards/${awardId}`, award);
         return response.data;
     } catch(error: any) {
-        throw new Error('Failed to update award. Please try again.');
+        const serverMessage = error.response?.data?.detail?.message || error.response?.data?.detail;
+        throw new Error(serverMessage || 'Failed to update award. Please try again.');
     }
 }
 
@@ -609,33 +624,6 @@ export const deleteAward = async(awardId: string): Promise<Award> => {
 }
 
 /**
- * Get Messages
- * @returns Array of messages if successful, throws error if failed
- */
-export const getMessages = async(): Promise<Message[]> => {
-    try {
-        const response = await api.get('/message');
-        return response.data;
-    } catch(error: any) {
-        throw new Error('Failed to get messages. Please try again.');
-    }
-}
-
-/**
- * Get Contact by ID
- * @param contactId - ID of the contact to get
- * @returns Contact object if successful, throws error if failed
- */
-export const getContactById = async(contactId: string): Promise<Message> => {
-    try {
-        const response = await api.get(`/contacts/${contactId}`);
-        return response.data;
-    } catch(error: any) {
-        throw new Error('Failed to get contact. Please try again.');
-    }
-}
-
-/**
  * Send Authenticated User Message
  * @param message - Message object containing messageSubject, messageContent, and recipientEmail
  * @returns Message object if successful, throws error if failed
@@ -650,7 +638,8 @@ export const sendAuthenticatedUserMessage = async(message: {
         const response = await authenticatedApi(token).post('/message/send', message);
         return response.data;
     } catch(error: any) {
-        throw new Error('Failed to send message. Please try again.');
+        const serverMessage = error.response?.data?.detail?.message || error.response?.data?.detail || error.response?.data?.message;
+        throw new Error(serverMessage || 'Failed to send message. Please try again.');
     }
 }
 
@@ -670,7 +659,8 @@ export const sendUnauthenticatedUserMessage = async(message: {
         const response = await api.post('/message/send/unauthenticated', message);
         return response.data;
     } catch(error: any) {
-        throw new Error('Failed to send message. Please try again.');
+        const serverMessage = error.response?.data?.detail?.message || error.response?.data?.detail || error.response?.data?.message;
+        throw new Error(serverMessage || 'Failed to send message. Please try again.');
     }
 }
 
@@ -785,7 +775,8 @@ export const updatePortfolio = async(portfolio: Partial<any>): Promise<any> => {
         const response = await authenticatedApi(token).put('/portfolio/', portfolio);
         return response.data;
     } catch(error: any) {
-        throw new Error('Failed to update portfolio. Please try again.');
+        const serverMessage = error.response?.data?.detail?.message || error.response?.data?.detail;
+        throw new Error(serverMessage || 'Failed to update portfolio. Please try again.');
     }
 }
 
@@ -796,11 +787,11 @@ export const updatePortfolio = async(portfolio: Partial<any>): Promise<any> => {
  * @returns Promise that resolves when PDF is downloaded
  */
 export const downloadResume = async (userId?: string): Promise<void> => {
+    if (!userId) {
+        throw new Error('User ID is required to download resume.');
+    }
     try {
-        // Use regular API (no authentication required)
-        const url = userId 
-            ? `/resume/latex?user_id=${userId}`
-            : `/resume/latex?user_id=${localStorage.getItem('current_user_id') || ''}`;
+        const url = `/resume/latex?user_id=${userId}`;
         
         const response = await api.get(url, {
             responseType: 'blob',

@@ -1,7 +1,6 @@
 import { createContext, ReactNode, useContext, useEffect, useState, Dispatch, SetStateAction } from "react";
-import { useLocation } from "react-router-dom";
 import { Award, Certification, Education, Experience, Message, MessageCount, Project, Skill } from "../services/modal";
-import { addSkill, getAwardsByUserId, getCertificationsByUserId, getEducationsByUserId, getExperiencesByUserId, getMessageCounts, getProjectsByUserId, getReceivedMessagesList, getSkillsByUserId } from "../services/api";
+import { getAwardsByUserId, getCertificationsByUserId, getEducationsByUserId, getExperiencesByUserId, getMessageCounts, getProjectsByUserId, getReceivedMessagesList, getSkillsByUserId } from "../services/api";
 import { useAuth } from "./AuthContext";
 
 interface PortfolioContextType {

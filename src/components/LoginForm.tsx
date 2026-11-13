@@ -1,28 +1,27 @@
 import React, { useState } from 'react';
 import { login } from '../services/api';
-import { useAuth } from '../context/AuthContext';
-
 
 const LoginForm: React.FC = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
-    const { setIsAuthenticated, isAuthenticated, setIsMe, setIsValidUser, setCurrentUser } = useAuth();
-    
+    const [error, setError] = useState('');
+
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
             setLoading(true);
+            setError('');
             const response = await login(email, password);
 
-            // Save token to localStorage or context if needed
             if (response.access_token) {
                 localStorage.setItem('access_token', response.access_token);
                 window.location.href = '/';
             }
-        } catch (error) {
-            // Login error handled
+        } catch (error: any) {
+            const serverMessage = error.response?.data?.detail?.message || error.response?.data?.detail || error.response?.data?.message;
+            setError(serverMessage || error.message || 'Invalid credentials. Please try again.');
         } finally {
             setLoading(false);
         }
@@ -30,6 +29,9 @@ const LoginForm: React.FC = () => {
 
     return (
         <form onSubmit={handleLogin} className="space-y-6">
+            {error && (
+                <div className="p-3 bg-red-500/10 border border-red-500/30 rounded-lg text-sm text-red-400">{error}</div>
+            )}
             <input
                 type="email"
                 placeholder="Email"

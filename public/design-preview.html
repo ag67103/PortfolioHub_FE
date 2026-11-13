@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Design Previews</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;700&family=Unbounded:wght@700;900&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:#111}
+
+/* Tab switcher */
+.tabs{position:fixed;top:0;left:0;right:0;z-index:999;background:#0a0a0a;border-bottom:1px solid #333;display:flex;gap:4px;padding:10px 16px}
+.tab{padding:8px 20px;border-radius:6px;cursor:pointer;font-size:13px;font-weight:600;border:1px solid #333;color:#888;background:transparent;transition:all .2s}
+.tab.active{background:#6366f1;border-color:#6366f1;color:#fff}
+.design{display:none;padding-top:56px}
+.design.active{display:block}
+
+/* ═══════════════════════════════════════════
+   DESIGN 1 — BENTO GRID
+═══════════════════════════════════════════ */
+#d1{background:#0a0a12;color:#f1f5f9;font-family:'Space Grotesk',sans-serif}
+
+.d1-nav{padding:16px 40px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #1e1e35}
+.d1-logo{font-weight:700;font-size:18px;color:#fff}
+.d1-logo span{color:#6366f1}
+.d1-nav-links{display:flex;gap:24px}
+.d1-nav-links a{color:#64748b;text-decoration:none;font-size:14px;transition:color .2s}
+.d1-nav-links a:hover{color:#fff}
+.d1-nav-btn{background:#6366f1;color:#fff;border:none;padding:8px 20px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer}
+
+.d1-hero{padding:40px 40px 60px;max-width:1100px;margin:0 auto}
+.d1-tag{display:inline-block;background:rgba(99,102,241,.12);color:#a5b4fc;border:1px solid rgba(99,102,241,.3);padding:4px 14px;border-radius:999px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:20px}
+
+/* BENTO GRID */
+.bento{display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:auto;gap:14px;margin-top:20px}
+
+.bento-card{background:#161625;border:1px solid #1e1e35;border-radius:16px;padding:20px;transition:border-color .3s,box-shadow .3s}
+.bento-card:hover{border-color:rgba(99,102,241,.5);box-shadow:0 0 20px rgba(99,102,241,.15)}
+
+.b-intro{grid-column:span 2;grid-row:span 2;background:linear-gradient(135deg,#161625,#1a1a2e);padding:36px}
+.b-intro h1{font-size:48px;font-weight:700;line-height:1.1;margin-bottom:12px}
+.b-intro h1 span{background:linear-gradient(135deg,#6366f1,#22d3ee);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.b-intro p{color:#64748b;font-size:15px;margin-bottom:24px;line-height:1.6}
+.b-intro-btns{display:flex;gap:10px}
+.btn-p{background:#6366f1;color:#fff;border:none;padding:10px 22px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer}
+.btn-g{background:transparent;color:#94a3b8;border:1px solid #1e1e35;padding:10px 22px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer}
+
+.b-stat{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.b-stat .num{font-size:40px;font-weight:700;background:linear-gradient(135deg,#6366f1,#22d3ee);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.b-stat .lbl{font-size:11px;color:#64748b;text-transform:uppercase;letter-spacing:.08em;margin-top:4px}
+
+.b-skill{display:flex;flex-direction:column;gap:10px}
+.b-skill .s-row{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:#94a3b8}
+.b-skill .bar{background:#1e1e35;border-radius:999px;height:5px;margin-top:6px}
+.b-skill .fill{height:100%;border-radius:999px;background:linear-gradient(90deg,#6366f1,#22d3ee)}
+
+.b-avatar{display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#6366f1,#22d3ee);border-radius:16px;font-size:56px;font-weight:700;color:transparent;-webkit-background-clip:text;background-clip:text;min-height:120px}
+
+.b-links{display:flex;flex-direction:column;gap:10px}
+.b-link{display:flex;align-items:center;gap:10px;color:#64748b;font-size:13px;text-decoration:none;padding:6px;border-radius:8px;transition:color .2s,background .2s}
+.b-link:hover{color:#a5b4fc;background:rgba(99,102,241,.08)}
+.b-link-dot{width:6px;height:6px;background:#6366f1;border-radius:50%}
+
+.b-dark-card{background:linear-gradient(135deg,rgba(99,102,241,.1),rgba(34,211,238,.05));border:1px solid rgba(99,102,241,.2)}
+
+/* Project grid under hero */
+.d1-section{padding:40px;max-width:1100px;margin:0 auto}
+.sec-hdr{display:flex;align-items:baseline;gap:12px;margin-bottom:24px}
+.sec-num{font-size:11px;color:#6366f1;letter-spacing:.15em;text-transform:uppercase;font-family:'JetBrains Mono',monospace}
+.sec-title{font-size:28px;font-weight:700;color:#f1f5f9}
+
+.proj-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.proj-card{background:#161625;border:1px solid #1e1e35;border-radius:14px;overflow:hidden;cursor:pointer;transition:all .3s}
+.proj-card:hover{border-color:rgba(99,102,241,.5);transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,.4)}
+.proj-img{height:140px;background:linear-gradient(135deg,#1a1a2e,#0f0f1a);display:flex;align-items:center;justify-content:center;font-size:32px;color:#1e1e35}
+.proj-body{padding:16px}
+.proj-title{font-size:15px;font-weight:600;color:#f1f5f9;margin-bottom:6px}
+.proj-desc{font-size:12px;color:#64748b;line-height:1.5;margin-bottom:10px}
+.proj-tags{display:flex;flex-wrap:wrap;gap:6px}
+.tag{background:rgba(99,102,241,.1);color:#a5b4fc;border:1px solid rgba(99,102,241,.25);padding:2px 10px;border-radius:999px;font-size:11px}
+
+/* ═══════════════════════════════════════════
+   DESIGN 2 — BRUTALIST EDITORIAL
+═══════════════════════════════════════════ */
+#d2{background:#0c0c0c;color:#f5f5f5;font-family:'Space Grotesk',sans-serif}
+
+.d2-nav{display:flex;justify-content:space-between;align-items:center;padding:20px 60px;border-bottom:1px solid #222}
+.d2-logo{font-family:'Unbounded',sans-serif;font-size:14px;font-weight:900;letter-spacing:-.02em}
+.d2-nav-r{display:flex;gap:32px;align-items:center}
+.d2-nav-r a{color:#666;text-decoration:none;font-size:13px;letter-spacing:.08em;text-transform:uppercase;transition:color .2s}
+.d2-nav-r a:hover{color:#fff}
+
+.d2-hero{padding:60px 60px 0;position:relative;overflow:hidden}
+.d2-available{display:inline-flex;align-items:center;gap:8px;background:#111;border:1px solid #333;padding:6px 16px;border-radius:999px;font-size:12px;color:#888;margin-bottom:40px}
+.d2-dot{width:8px;height:8px;background:#22d3ee;border-radius:50%;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+.d2-name{font-family:'Unbounded',sans-serif;font-size:clamp(56px,8vw,100px);font-weight:900;line-height:.9;letter-spacing:-.04em;text-transform:uppercase;margin-bottom:0}
+.d2-name .accent{color:#6366f1}
+.d2-name .outline{-webkit-text-stroke:2px #333;color:transparent}
+
+.d2-belt{display:flex;justify-content:space-between;align-items:flex-end;margin-top:24px;padding-bottom:40px;border-bottom:1px solid #222}
+.d2-role{font-size:18px;color:#888;max-width:320px;line-height:1.5}
+.d2-role strong{color:#f5f5f5}
+.d2-stats{display:flex;gap:40px}
+.d2-stat .n{font-family:'Unbounded',sans-serif;font-size:36px;font-weight:900;color:#f5f5f5}
+.d2-stat .l{font-size:11px;color:#555;text-transform:uppercase;letter-spacing:.1em;margin-top:4px}
+
+/* Big decorative number */
+.d2-section{position:relative;padding:60px;overflow:hidden}
+.d2-deco-num{position:absolute;top:-20px;right:40px;font-family:'Unbounded',sans-serif;font-size:200px;font-weight:900;color:#111;line-height:1;pointer-events:none;user-select:none;z-index:0}
+.d2-sec-hdr{position:relative;z-index:1;display:flex;align-items:center;gap:16px;margin-bottom:48px}
+.d2-sec-line{flex:1;height:1px;background:#222}
+.d2-sec-label{font-size:11px;color:#555;text-transform:uppercase;letter-spacing:.2em;white-space:nowrap}
+.d2-sec-title{font-family:'Unbounded',sans-serif;font-size:40px;font-weight:900;letter-spacing:-.03em;position:relative;z-index:1;margin-bottom:40px}
+
+/* Editorial project */
+.d2-proj{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid #222;border-radius:4px;overflow:hidden;margin-bottom:24px;position:relative;z-index:1}
+.d2-proj.flip{direction:rtl}
+.d2-proj.flip > *{direction:ltr}
+.d2-proj-img{height:260px;background:linear-gradient(135deg,#1a1a2e,#0f0f1a);display:flex;align-items:center;justify-content:center;font-size:48px;color:#222}
+.d2-proj-body{padding:40px;display:flex;flex-direction:column;justify-content:space-between;background:#0f0f0f}
+.d2-proj-num{font-family:'JetBrains Mono',monospace;font-size:11px;color:#555;margin-bottom:12px;letter-spacing:.1em}
+.d2-proj-title{font-family:'Unbounded',sans-serif;font-size:22px;font-weight:900;letter-spacing:-.02em;margin-bottom:12px;color:#f5f5f5}
+.d2-proj-desc{font-size:13px;color:#666;line-height:1.7;margin-bottom:20px}
+.d2-proj-link{font-size:12px;color:#6366f1;text-decoration:none;letter-spacing:.08em;text-transform:uppercase;display:inline-flex;align-items:center;gap:6px}
+.d2-proj-link::after{content:'→'}
+
+/* Skills as flat chips */
+.d2-skills{display:flex;flex-wrap:wrap;gap:12px;position:relative;z-index:1}
+.d2-skill-chip{border:1px solid #222;padding:10px 20px;font-size:13px;color:#888;cursor:default;transition:all .2s}
+.d2-skill-chip:hover{border-color:#6366f1;color:#f5f5f5;background:#6366f1}
+
+/* ═══════════════════════════════════════════
+   DESIGN 3 — GLASSMORPHIC LAYERS
+═══════════════════════════════════════════ */
+#d3{min-height:100vh;background:#080812;color:#f1f5f9;font-family:'Inter',sans-serif;position:relative}
+
+.d3-mesh{position:fixed;inset:0;z-index:0;pointer-events:none;background:
+  radial-gradient(ellipse at 20% 20%, rgba(99,102,241,.25) 0%, transparent 50%),
+  radial-gradient(ellipse at 80% 80%, rgba(139,92,246,.2) 0%, transparent 50%),
+  radial-gradient(ellipse at 50% 50%, rgba(34,211,238,.1) 0%, transparent 60%)}
+.d3-noise{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.03;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+.d3-wrap{position:relative;z-index:2}
+.d3-nav{padding:20px 40px;display:flex;justify-content:space-between;align-items:center}
+.d3-glass-nav{background:rgba(255,255,255,.04);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.08);padding:10px 24px;border-radius:999px;display:flex;gap:24px;align-items:center}
+.d3-glass-nav a{color:#64748b;text-decoration:none;font-size:13px;transition:color .2s}
+.d3-glass-nav a:hover{color:#f1f5f9}
+.d3-hero{padding:60px 40px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:60px}
+.d3-hero-inner{position:relative;max-width:700px}
+
+/* Floating cards */
+.d3-card{background:rgba(255,255,255,.05);backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:24px}
+
+.d3-hero-name{font-family:'Space Grotesk',sans-serif;font-size:64px;font-weight:700;line-height:1.05;margin:24px 0 16px}
+.d3-hero-name .g{background:linear-gradient(135deg,#818cf8,#22d3ee);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.d3-hero-role{font-size:18px;color:#64748b;margin-bottom:32px}
+.d3-hero-btns{display:flex;gap:12px;justify-content:center}
+.d3-btn-glow{background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;border:none;padding:12px 28px;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;box-shadow:0 0 30px rgba(99,102,241,.4);transition:box-shadow .3s}
+.d3-btn-glow:hover{box-shadow:0 0 50px rgba(99,102,241,.7)}
+.d3-btn-ghost{background:rgba(255,255,255,.06);color:#94a3b8;border:1px solid rgba(255,255,255,.1);padding:12px 28px;border-radius:12px;font-size:14px;cursor:pointer}
+
+/* Floating stat cards */
+.d3-stats-row{display:flex;gap:16px;justify-content:center}
+.d3-stat-card{text-align:center;padding:20px 32px;background:rgba(255,255,255,.05);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.08);border-radius:16px}
+.d3-stat-card .n{font-family:'Space Grotesk',sans-serif;font-size:36px;font-weight:700;background:linear-gradient(135deg,#818cf8,#22d3ee);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.d3-stat-card .l{font-size:12px;color:#64748b;margin-top:4px;text-transform:uppercase;letter-spacing:.07em}
+
+/* Skills rings */
+.d3-skills-section{padding:60px 40px;max-width:900px;margin:0 auto}
+.d3-skills-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:32px}
+.d3-ring-card{background:rgba(255,255,255,.04);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:24px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:12px;transition:border-color .3s,box-shadow .3s}
+.d3-ring-card:hover{border-color:rgba(99,102,241,.4);box-shadow:0 0 30px rgba(99,102,241,.15)}
+.ring-svg{width:80px;height:80px}
+.ring-track{fill:none;stroke:rgba(99,102,241,.15);stroke-width:6}
+.ring-fill{fill:none;stroke-width:6;stroke-linecap:round;transform:rotate(-90deg);transform-origin:50% 50%}
+.ring-label{font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:600;color:#f1f5f9}
+.ring-sub{font-size:11px;color:#64748b}
+
+.d3-sec-hdr{text-align:center;margin-bottom:8px}
+.d3-sec-label{font-size:11px;color:#6366f1;text-transform:uppercase;letter-spacing:.15em;font-family:'JetBrains Mono',monospace}
+.d3-sec-title{font-family:'Space Grotesk',sans-serif;font-size:32px;font-weight:700;color:#f1f5f9;margin-top:8px}
+
+/* ═══════════════════════════════════════════
+   DESIGN 4 — TERMINAL / CODE IDE
+═══════════════════════════════════════════ */
+#d4{background:#0d1117;color:#e6edf3;font-family:'JetBrains Mono',monospace}
+
+.d4-titlebar{background:#161b22;border-bottom:1px solid #30363d;padding:10px 16px;display:flex;align-items:center;gap:8px}
+.d4-dots{display:flex;gap:6px}
+.d4-dots span{width:12px;height:12px;border-radius:50%}
+.d4-dots .r{background:#ff5f57}
+.d4-dots .y{background:#febc2e}
+.d4-dots .g{background:#28c840}
+.d4-filename{margin-left:12px;font-size:12px;color:#8b949e;letter-spacing:.02em}
+.d4-tabs{display:flex;gap:0;border-bottom:1px solid #21262d}
+.d4-tab-item{padding:8px 24px;font-size:12px;color:#8b949e;border-right:1px solid #21262d;cursor:pointer;transition:all .2s;border-bottom:2px solid transparent}
+.d4-tab-item.active{color:#e6edf3;border-bottom-color:#6366f1;background:#0d1117}
+
+.d4-content{display:grid;grid-template-columns:240px 1fr;min-height:calc(100vh - 100px)}
+.d4-sidebar{background:#161b22;border-right:1px solid #21262d;padding:16px 0}
+.d4-sidebar-sec{margin-bottom:16px}
+.d4-sidebar-hdr{padding:6px 16px;font-size:10px;color:#8b949e;text-transform:uppercase;letter-spacing:.1em}
+.d4-sidebar-item{padding:5px 16px 5px 28px;font-size:12px;color:#8b949e;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:8px}
+.d4-sidebar-item:hover,.d4-sidebar-item.active{background:rgba(99,102,241,.1);color:#e6edf3}
+.d4-sidebar-item::before{content:'';width:6px;height:6px;background:#6366f1;border-radius:50%;opacity:0}
+.d4-sidebar-item.active::before{opacity:1}
+
+.d4-editor{padding:0;overflow:hidden}
+.d4-line-area{display:grid;grid-template-columns:48px 1fr}
+.d4-line-nums{background:#0d1117;padding:24px 0;text-align:right;border-right:1px solid #21262d}
+.d4-ln{font-size:12px;color:#3d444d;padding:0 12px 0 0;line-height:24px}
+.d4-code{padding:24px 24px;font-size:13px;line-height:24px;overflow-x:auto}
+
+/* Syntax colors */
+.kw{color:#ff7b72}   /* keywords */
+.fn{color:#d2a8ff}   /* functions */
+.str{color:#a5d6ff}  /* strings */
+.num{color:#79c0ff}  /* numbers */
+.cmt{color:#8b949e;font-style:italic}  /* comments */
+.prop{color:#e3b341} /* properties */
+.cls{color:#ffa657}  /* class names */
+.var{color:#e6edf3}  /* variables */
+.punct{color:#e6edf3}
+
+/* Hero terminal */
+.d4-terminal-hero{padding:40px}
+.d4-prompt-line{display:flex;align-items:flex-start;gap:12px;margin-bottom:8px}
+.d4-prompt{color:#6366f1;font-size:14px}
+.d4-cmd{color:#e6edf3;font-size:14px}
+.d4-output{padding-left:28px;margin-bottom:20px}
+.d4-output p{font-size:13px;line-height:1.8}
+.d4-ascii-name{font-size:clamp(22px,3vw,40px);font-weight:700;font-family:'Space Grotesk',sans-serif;background:linear-gradient(135deg,#6366f1,#22d3ee);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:4px;line-height:1.1}
+.d4-output .role{color:#a5d6ff;font-size:13px}
+.d4-output .sub{color:#8b949e;font-size:12px}
+.blink{animation:blink 1s step-end infinite;color:#6366f1}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+
+.d4-skills-section{padding:0 40px 40px}
+.d4-skill-rows{display:grid;grid-template-columns:1fr 1fr;gap:0}
+.d4-skill-cat{padding-right:40px;border-right:1px solid #21262d}
+.d4-skill-cat:last-child{border-right:none;padding-left:40px;padding-right:0}
+.d4-cat-hdr{font-size:12px;color:#8b949e;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid #21262d}
+.d4-skill-item{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-size:12px}
+.d4-skill-name{color:#e3b341}
+.d4-skill-dots{display:flex;gap:3px}
+.d4-skill-dot{width:10px;height:10px;border-radius:2px;background:#21262d}
+.d4-skill-dot.on{background:#6366f1}
+
+.d4-git-section{padding:0 40px 40px}
+.d4-git-log{background:#0a0c10;border:1px solid #21262d;border-radius:6px;padding:16px;font-size:12px}
+.d4-git-entry{display:flex;align-items:flex-start;gap:12px;margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid #161b22}
+.d4-git-entry:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.d4-hash{color:#d2a8ff;min-width:52px}
+.d4-msg{color:#e6edf3}
+.d4-author{color:#8b949e;font-size:11px;margin-top:2px}
+.d4-date{color:#8b949e;font-size:11px;margin-left:auto;white-space:nowrap}
+</style>
+</head>
+<body>
+
+<div class="tabs">
+  <button class="tab active" onclick="show('d1',this)">① Bento Grid</button>
+  <button class="tab" onclick="show('d2',this)">② Brutalist Editorial</button>
+  <button class="tab" onclick="show('d3',this)">③ Glassmorphic Layers</button>
+  <button class="tab" onclick="show('d4',this)">④ Terminal / Code IDE</button>
+</div>
+
+<!-- ══════════ DESIGN 1: BENTO ══════════ -->
+<div id="d1" class="design active">
+  <nav class="d1-nav">
+    <div class="d1-logo">Portfolio<span>Hub</span></div>
+    <div class="d1-nav-links">
+      <a href="#">About</a><a href="#">Skills</a><a href="#">Projects</a><a href="#">Experience</a>
+    </div>
+    <button class="d1-nav-btn">Get Started</button>
+  </nav>
+
+  <div class="d1-hero">
+    <span class="d1-tag">Available for work</span>
+    <div class="bento">
+      <!-- INTRO 2x2 -->
+      <div class="bento-card b-intro">
+        <h1>Hi, I'm<br/><span>Avinash</span></h1>
+        <p>Full-stack engineer building products people love. Open to senior & staff roles.</p>
+        <div class="b-intro-btns">
+          <button class="btn-p">Download CV</button>
+          <button class="btn-g">View Projects →</button>
+        </div>
+      </div>
+
+      <!-- STAT: Years -->
+      <div class="bento-card b-stat">
+        <div class="num">5+</div>
+        <div class="lbl">Years Exp</div>
+      </div>
+
+      <!-- STAT: Projects -->
+      <div class="bento-card b-stat">
+        <div class="num">12</div>
+        <div class="lbl">Projects</div>
+      </div>
+
+      <!-- AVATAR -->
+      <div class="bento-card b-avatar">AG</div>
+
+      <!-- LINKS -->
+      <div class="bento-card b-links">
+        <a href="#" class="b-link"><span class="b-link-dot"></span>GitHub</a>
+        <a href="#" class="b-link"><span class="b-link-dot"></span>LinkedIn</a>
+        <a href="#" class="b-link"><span class="b-link-dot"></span>Email</a>
+        <a href="#" class="b-link"><span class="b-link-dot"></span>Resume</a>
+      </div>
+
+      <!-- TOP SKILL -->
+      <div class="bento-card b-skill" style="grid-column:span 2">
+        <div style="font-size:12px;color:#64748b;text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px">Top Skills</div>
+        <div><div class="s-row"><span>React</span><span style="color:#a5b4fc">95%</span></div><div class="bar"><div class="fill" style="width:95%"></div></div></div>
+        <div><div class="s-row"><span>Python</span><span style="color:#a5b4fc">88%</span></div><div class="bar"><div class="fill" style="width:88%"></div></div></div>
+        <div><div class="s-row"><span>FastAPI</span><span style="color:#a5b4fc">82%</span></div><div class="bar"><div class="fill" style="width:82%"></div></div></div>
+      </div>
+
+      <!-- QUOTE card -->
+      <div class="bento-card b-dark-card" style="grid-column:span 2;display:flex;flex-direction:column;justify-content:center">
+        <div style="font-size:18px;color:#a5b4fc;font-style:italic;line-height:1.5">"Building things that matter, with code that scales."</div>
+        <div style="font-size:12px;color:#64748b;margin-top:10px">— Personal philosophy</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Projects section -->
+  <div class="d1-section">
+    <div class="sec-hdr">
+      <span class="sec-num">03 — Projects</span>
+      <div class="sec-title">Featured Work</div>
+    </div>
+    <div class="proj-grid">
+      <div class="proj-card">
+        <div class="proj-img">◈</div>
+        <div class="proj-body">
+          <div class="proj-title">Portfolio Hub</div>
+          <div class="proj-desc">Full-stack portfolio platform with React, FastAPI and MongoDB.</div>
+          <div class="proj-tags"><span class="tag">React</span><span class="tag">FastAPI</span><span class="tag">MongoDB</span></div>
+        </div>
+      </div>
+      <div class="proj-card">
+        <div class="proj-img">⬡</div>
+        <div class="proj-body">
+          <div class="proj-title">InnovateTech CRM</div>
+          <div class="proj-desc">Enterprise CRM with real-time analytics and WebSocket notifications.</div>
+          <div class="proj-tags"><span class="tag">TypeScript</span><span class="tag">Node.js</span><span class="tag">Redis</span></div>
+        </div>
+      </div>
+      <div class="proj-card">
+        <div class="proj-img">⬟</div>
+        <div class="proj-body">
+          <div class="proj-title">Data Pipeline</div>
+          <div class="proj-desc">Automated ETL pipeline processing 10M records daily.</div>
+          <div class="proj-tags"><span class="tag">Python</span><span class="tag">Airflow</span><span class="tag">Spark</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ DESIGN 2: BRUTALIST ══════════ -->
+<div id="d2" class="design">
+  <nav class="d2-nav">
+    <div class="d2-logo">AG</div>
+    <div class="d2-nav-r">
+      <a href="#">Work</a><a href="#">About</a><a href="#">Skills</a><a href="#">Contact</a>
+      <div style="background:#6366f1;color:#fff;padding:8px 20px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer">Hire Me →</div>
+    </div>
+  </nav>
+
+  <div class="d2-hero">
+    <div class="d2-available"><span class="d2-dot"></span> Open to work</div>
+    <div class="d2-name">
+      AVINASH<br/>
+      <span class="outline">GUPTA</span>
+    </div>
+    <div class="d2-belt">
+      <div class="d2-role">
+        <strong>Software Engineer</strong> crafting high-performance<br/>
+        web applications and scalable systems.
+      </div>
+      <div class="d2-stats">
+        <div class="d2-stat"><div class="n">5+</div><div class="l">Years</div></div>
+        <div class="d2-stat"><div class="n">12</div><div class="l">Projects</div></div>
+        <div class="d2-stat"><div class="n">3</div><div class="l">Companies</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Projects section with big deco number -->
+  <div class="d2-section">
+    <div class="d2-deco-num">01</div>
+    <div class="d2-sec-hdr">
+      <span class="d2-sec-label">Selected work</span>
+      <div class="d2-sec-line"></div>
+    </div>
+    <div class="d2-sec-title">Projects</div>
+
+    <div class="d2-proj">
+      <div class="d2-proj-img">⬡</div>
+      <div class="d2-proj-body">
+        <div>
+          <div class="d2-proj-num">Project — 01</div>
+          <div class="d2-proj-title">Portfolio Hub</div>
+          <div class="d2-proj-desc">A full-stack platform for building and sharing professional portfolios. Built with React, FastAPI, and MongoDB. Features real-time messaging via WebSocket.</div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:flex-end">
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <span style="border:1px solid #333;padding:4px 12px;font-size:11px;color:#666;text-transform:uppercase;letter-spacing:.08em">React</span>
+            <span style="border:1px solid #333;padding:4px 12px;font-size:11px;color:#666;text-transform:uppercase;letter-spacing:.08em">FastAPI</span>
+            <span style="border:1px solid #333;padding:4px 12px;font-size:11px;color:#666;text-transform:uppercase;letter-spacing:.08em">MongoDB</span>
+          </div>
+          <a href="#" class="d2-proj-link">View Project</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="d2-proj flip">
+      <div class="d2-proj-img">◈</div>
+      <div class="d2-proj-body">
+        <div>
+          <div class="d2-proj-num">Project — 02</div>
+          <div class="d2-proj-title">InnovateTech CRM</div>
+          <div class="d2-proj-desc">Enterprise-grade CRM system with real-time analytics dashboard, role-based access control, and live notification system.</div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:flex-end">
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <span style="border:1px solid #333;padding:4px 12px;font-size:11px;color:#666;text-transform:uppercase;letter-spacing:.08em">TypeScript</span>
+            <span style="border:1px solid #333;padding:4px 12px;font-size:11px;color:#666;text-transform:uppercase;letter-spacing:.08em">Node.js</span>
+          </div>
+          <a href="#" class="d2-proj-link">View Project</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Skills flat chips -->
+  <div class="d2-section" style="border-top:1px solid #222">
+    <div class="d2-deco-num">02</div>
+    <div class="d2-sec-hdr"><span class="d2-sec-label">Capabilities</span><div class="d2-sec-line"></div></div>
+    <div class="d2-sec-title">Skills</div>
+    <div class="d2-skills">
+      <div class="d2-skill-chip">React</div><div class="d2-skill-chip">TypeScript</div><div class="d2-skill-chip">Python</div><div class="d2-skill-chip">FastAPI</div><div class="d2-skill-chip">MongoDB</div><div class="d2-skill-chip">Node.js</div><div class="d2-skill-chip">PostgreSQL</div><div class="d2-skill-chip">Docker</div><div class="d2-skill-chip">AWS</div><div class="d2-skill-chip">Redis</div><div class="d2-skill-chip">GraphQL</div><div class="d2-skill-chip">Tailwind CSS</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ DESIGN 3: GLASSMORPHIC ══════════ -->
+<div id="d3" class="design">
+  <div class="d3-mesh"></div>
+  <div class="d3-noise"></div>
+  <div class="d3-wrap">
+    <nav class="d3-nav">
+      <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:16px">Portfolio<span style="color:#818cf8">Hub</span></div>
+      <div class="d3-glass-nav">
+        <a href="#">About</a><a href="#">Skills</a><a href="#">Projects</a><a href="#">Contact</a>
+      </div>
+      <div style="background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;padding:8px 20px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer">Hire Me</div>
+    </nav>
+
+    <div class="d3-hero">
+      <div class="d3-hero-inner">
+        <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(99,102,241,.12);border:1px solid rgba(99,102,241,.25);padding:6px 16px;border-radius:999px;font-size:12px;color:#a5b4fc;margin-bottom:24px">
+          <span style="width:6px;height:6px;background:#22d3ee;border-radius:50%;display:inline-block"></span>
+          Available for new opportunities
+        </div>
+        <div class="d3-hero-name">Hi, I'm <span class="g">Avinash</span></div>
+        <div class="d3-hero-role">Full-Stack Software Engineer · 5 years building production systems</div>
+        <div class="d3-hero-btns">
+          <button class="d3-btn-glow">Download Resume</button>
+          <button class="d3-btn-ghost">View My Work</button>
+        </div>
+      </div>
+
+      <div class="d3-stats-row">
+        <div class="d3-stat-card"><div class="n">5+</div><div class="l">Years</div></div>
+        <div class="d3-stat-card"><div class="n">12</div><div class="l">Projects</div></div>
+        <div class="d3-stat-card"><div class="n">3</div><div class="l">Companies</div></div>
+        <div class="d3-stat-card"><div class="n">20+</div><div class="l">Technologies</div></div>
+      </div>
+    </div>
+
+    <div class="d3-skills-section">
+      <div class="d3-sec-hdr">
+        <div class="d3-sec-label">02 — Skills</div>
+        <div class="d3-sec-title">Technical Expertise</div>
+      </div>
+      <div class="d3-skills-grid">
+        <!-- Circular rings -->
+        <div class="d3-ring-card">
+          <svg class="ring-svg" viewBox="0 0 80 80">
+            <circle class="ring-track" cx="40" cy="40" r="30"/>
+            <circle class="ring-fill" cx="40" cy="40" r="30" stroke="#6366f1" stroke-dasharray="168.8" stroke-dashoffset="8.44"/>
+          </svg>
+          <div class="ring-label">React</div>
+          <div class="ring-sub">95%</div>
+        </div>
+        <div class="d3-ring-card">
+          <svg class="ring-svg" viewBox="0 0 80 80">
+            <circle class="ring-track" cx="40" cy="40" r="30"/>
+            <circle class="ring-fill" cx="40" cy="40" r="30" stroke="#22d3ee" stroke-dasharray="168.8" stroke-dashoffset="20.26"/>
+          </svg>
+          <div class="ring-label">Python</div>
+          <div class="ring-sub">88%</div>
+        </div>
+        <div class="d3-ring-card">
+          <svg class="ring-svg" viewBox="0 0 80 80">
+            <circle class="ring-track" cx="40" cy="40" r="30"/>
+            <circle class="ring-fill" cx="40" cy="40" r="30" stroke="#8b5cf6" stroke-dasharray="168.8" stroke-dashoffset="30.38"/>
+          </svg>
+          <div class="ring-label">FastAPI</div>
+          <div class="ring-sub">82%</div>
+        </div>
+        <div class="d3-ring-card">
+          <svg class="ring-svg" viewBox="0 0 80 80">
+            <circle class="ring-track" cx="40" cy="40" r="30"/>
+            <circle class="ring-fill" cx="40" cy="40" r="30" stroke="#f472b6" stroke-dasharray="168.8" stroke-dashoffset="33.76"/>
+          </svg>
+          <div class="ring-label">TypeScript</div>
+          <div class="ring-sub">80%</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ DESIGN 4: TERMINAL ══════════ -->
+<div id="d4" class="design">
+  <div class="d4-titlebar">
+    <div class="d4-dots"><span class="r"></span><span class="y"></span><span class="g"></span></div>
+    <div class="d4-filename">portfolio.dev — zsh — 140×40</div>
+  </div>
+  <div class="d4-tabs">
+    <div class="d4-tab-item active">~/about.sh</div>
+    <div class="d4-tab-item">~/skills.json</div>
+    <div class="d4-tab-item">~/experience.git</div>
+    <div class="d4-tab-item">~/projects/</div>
+  </div>
+  <div class="d4-content">
+    <!-- sidebar: file explorer -->
+    <div class="d4-sidebar">
+      <div class="d4-sidebar-sec">
+        <div class="d4-sidebar-hdr">Explorer</div>
+        <div class="d4-sidebar-item active">📄 about.sh</div>
+        <div class="d4-sidebar-item">📄 skills.json</div>
+        <div class="d4-sidebar-item">📂 projects/</div>
+        <div class="d4-sidebar-item" style="padding-left:44px">📄 portfolio-hub.md</div>
+        <div class="d4-sidebar-item" style="padding-left:44px">📄 innovatetech.md</div>
+        <div class="d4-sidebar-item">📂 experience/</div>
+        <div class="d4-sidebar-item" style="padding-left:44px">📄 innovaccer.md</div>
+        <div class="d4-sidebar-item">📄 contact.sh</div>
+      </div>
+      <div class="d4-sidebar-sec" style="border-top:1px solid #21262d;padding-top:12px;margin-top:8px">
+        <div class="d4-sidebar-hdr">Git Branch</div>
+        <div class="d4-sidebar-item"><span style="color:#28c840">●</span> main</div>
+      </div>
+    </div>
+
+    <!-- editor area -->
+    <div class="d4-editor">
+      <!-- HERO: terminal prompt -->
+      <div class="d4-terminal-hero">
+        <div class="d4-prompt-line">
+          <span class="d4-prompt">❯</span>
+          <span class="d4-cmd">./about.sh <span style="color:#8b949e">--verbose</span></span>
+        </div>
+        <div class="d4-output">
+          <div class="d4-ascii-name">AVINASH GUPTA</div>
+          <p class="role">▸ Software Engineer · Full-Stack</p>
+          <p class="sub" style="margin-top:4px">▸ React · Python · FastAPI · MongoDB · TypeScript</p>
+          <p class="sub">▸ 5 years of experience · Open to work</p>
+        </div>
+        <div class="d4-prompt-line">
+          <span class="d4-prompt">❯</span>
+          <span class="d4-cmd">cat skills.json</span>
+        </div>
+        <div class="d4-output" style="margin-top:8px">
+          <div class="d4-skill-rows">
+            <div class="d4-skill-cat">
+              <div class="d4-cat-hdr"># Frontend</div>
+              <div class="d4-skill-item">
+                <span class="d4-skill-name">React / Next.js</span>
+                <div class="d4-skill-dots">
+                  <div class="d4-skill-dot on"></div><div class="d4-skill-dot on"></div><div class="d4-skill-dot on"></div><div class="d4-skill-dot on"></div><div class="d4-skill-dot on"></div>
+                </div>
+              </div>
+              <div class="d4-skill-item">
+                <span class="d4-skill-name">TypeScript</span>
+                <div class="d4-skill-dots">
+                  <div class="d4-skill-dot on"></div><div class="d4-skill-dot on"></div><div class="d4-skill-dot on"></div><div class="d4-skill-dot on"></div><div class="d4-skill-dot"></div>
+                </div>
+              </div>
+              <div class="d4-skill-item">
+                <span class="d4-skill-name">Tailwind CSS</span>
+                <div class="d4-skill-dots">
+                  <div class="d4-skill-dot on"></div><div class="d4-skill-dot on"></div><div class="d4-skill-dot on"></div><div class="d4-skill-dot on"></div><div class="d4-skill-dot on"></div>
+                </div>
+              </div>
+            </div>
+            <div class="d4-skill-cat">
+              <div class="d4-cat-hdr"># Backend</div>
+              <div class="d4-skill-item">
+                <span class="d4-skill-name">Python / FastAPI</span>
+                <div class="d4-skill-dots">
+                  <div class="d4-skill-dot on"></div><div class="d4-skill-dot on"></div><div class="d4-skill-dot on"></div><div class="d4-skill-dot on"></div><div class="d4-skill-dot"></div>
+                </div>
+              </div>
+              <div class="d4-skill-item">
+                <span class="d4-skill-name">Node.js</span>
+                <div class="d4-skill-dots">
+                  <div class="d4-skill-dot on"></div><div class="d4-skill-dot on"></div><div class="d4-skill-dot on"></div><div class="d4-skill-dot"></div><div class="d4-skill-dot"></div>
+                </div>
+              </div>
+              <div class="d4-skill-item">
+                <span class="d4-skill-name">MongoDB / SQL</span>
+                <div class="d4-skill-dots">
+                  <div class="d4-skill-dot on"></div><div class="d4-skill-dot on"></div><div class="d4-skill-dot on"></div><div class="d4-skill-dot on"></div><div class="d4-skill-dot"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="d4-prompt-line" style="margin-top:16px">
+          <span class="d4-prompt">❯</span>
+          <span class="d4-cmd">git log --oneline experience<span class="blink">█</span></span>
+        </div>
+        <div class="d4-git-section" style="padding:12px 0 0 0">
+          <div class="d4-git-log">
+            <div class="d4-git-entry">
+              <span class="d4-hash">a3f8c12</span>
+              <div>
+                <div class="d4-msg">feat: Senior Engineer @ Innovaccer</div>
+                <div class="d4-author">Avinash Gupta &lt;ag@innovaccer.com&gt;</div>
+              </div>
+              <span class="d4-date">2021 → present</span>
+            </div>
+            <div class="d4-git-entry">
+              <span class="d4-hash">b7d2e41</span>
+              <div>
+                <div class="d4-msg">feat: Full-stack Dev @ StartupX</div>
+                <div class="d4-author">Avinash Gupta</div>
+              </div>
+              <span class="d4-date">2019 → 2021</span>
+            </div>
+            <div class="d4-git-entry">
+              <span class="d4-hash">c1a9f03</span>
+              <div>
+                <div class="d4-msg">init: First commit — CS degree</div>
+                <div class="d4-author">Avinash Gupta</div>
+              </div>
+              <span class="d4-date">2015 → 2019</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function show(id, btn) {
+  document.querySelectorAll('.design').forEach(d => d.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
+</body>
+</html>

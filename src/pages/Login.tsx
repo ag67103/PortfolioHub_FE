@@ -1,19 +1,34 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { Link } from 'react-router-dom';
 import LoginForm from '../components/LoginForm';
 
 const Login: React.FC = () => {
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-500 to-purple-600">
-          <div className="bg-white/90 rounded-2xl shadow-lg p-8 w-full max-w-md">
-            <h2 className="text-3xl font-bold text-center text-blue-700 mb-6">Login</h2>
-            <LoginForm />
-            <div className="mt-6 text-center text-gray-700">
-              Don't have an account?{' '}
-              {/* <Link to={userId ? `/register?user=${userId}` : '/register'} className="text-blue-600 hover:underline font-semibold">Register</Link> */}
+        <div className="min-h-screen flex items-center justify-center section-obsidian relative overflow-hidden">
+            {/* Ambient blobs */}
+            <div className="absolute top-1/3 left-1/4 w-72 h-72 bg-accent-indigo/10 rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute bottom-1/3 right-1/4 w-64 h-64 bg-accent-cyan/6 rounded-full blur-3xl pointer-events-none" />
+
+            <div className="obs-card w-full max-w-md mx-4 p-8 relative z-10">
+                <div className="text-center mb-8">
+                    <div className="inline-flex items-center justify-center w-12 h-12 bg-accent-indigo/10 border border-accent-indigo/30 rounded-xl mb-4">
+                        <span className="font-grotesk font-bold text-accent-indigo text-lg">PH</span>
+                    </div>
+                    <h2 className="font-grotesk text-2xl font-bold text-ink-primary">Welcome back</h2>
+                    <p className="text-ink-muted text-sm mt-1">Sign in to your portfolio</p>
+                </div>
+
+                <LoginForm />
+
+                <p className="mt-6 text-center text-ink-muted text-sm">
+                    Don't have an account?{' '}
+                    <Link to="/register" className="text-accent-indigo hover:text-accent-cyan font-semibold transition-colors">
+                        Register
+                    </Link>
+                </p>
             </div>
-          </div>
         </div>
-      );
+    );
 };
 
 export default Login;

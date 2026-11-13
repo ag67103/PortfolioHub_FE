@@ -1,37 +1,41 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { getNavigationItems } from '../config/navigation';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Menu, X } from 'lucide-react';
 
 const Navbar: React.FC = () => {
-    const { isAuthenticated, isMe, isValidUser, logout } = useAuth();
+    const { isAuthenticated, isMe, isValidUser, logout, isCurrentUserLoading } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
     const navItems = getNavigationItems(isMe, isValidUser);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [scrolled, setScrolled] = useState(false);
+
+    // Landing page = auth resolved, not authenticated, not on a user profile page
+    const isLanding = !isCurrentUserLoading && !isAuthenticated && !isValidUser;
+
+    useEffect(() => {
+        const onScroll = () => setScrolled(window.scrollY > 20);
+        window.addEventListener('scroll', onScroll, { passive: true });
+        return () => window.removeEventListener('scroll', onScroll);
+    }, []);
+
+    // Close mobile menu on route change
+    useEffect(() => { setIsMobileMenuOpen(false); }, [location.pathname]);
 
     const handleNavClick = (item: { path: string; isRoute: boolean; label: string }) => {
         if (item.isRoute) {
-            // Handle route navigation (e.g., Home -> /)
             if (item.path === '/' && location.pathname === '/') {
-                // Already on home page, scroll to top
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             } else {
                 navigate(item.path);
             }
         } else {
-            // Handle hash/section navigation (e.g., #about, #skills)
             const sectionId = item.path.replace('#', '');
-            
             if (location.pathname === '/') {
-                // Already on home page, scroll to section
-                const element = document.getElementById(sectionId);
-                if (element) {
-                    element.scrollIntoView({ behavior: 'smooth' });
-                }
+                document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
             } else {
-                // Not on home page, navigate to home with scroll state
                 navigate('/', { state: { scrollTo: sectionId } });
             }
         }
@@ -40,130 +44,120 @@ const Navbar: React.FC = () => {
     const handleLogout = async () => {
         await logout();
         navigate('/');
-    }
-    
-    const toggleMobileMenu = () => {
-        setIsMobileMenuOpen(!isMobileMenuOpen);
-    };
-
-    const handleMobileNavClick = (item: { path: string; isRoute: boolean; label: string }) => {
-        handleNavClick(item);
-        setIsMobileMenuOpen(false); // Close mobile menu after navigation
     };
 
     return (
-        <nav className="sticky top-0 z-50">
-            <div className="bg-purple-900 py-4">
-                <div className="container mx-auto px-4">
-                    <div className="flex justify-between items-center min-h-[3rem]">
-                        <div className="flex items-center">
-                            <img 
-                                src="/logo.png" 
-                                alt="Portfolio Hub Logo" 
-                                className="h-12 w-12 lg:h-16 lg:w-16"
-                            />
-                        </div>
-                        
-                        {/* Desktop Navigation */}
-                        <div className="hidden lg:flex space-x-4 xl:space-x-6 2xl:space-x-8 items-center">
+        <nav className={`sticky top-0 z-50 transition-all duration-300 ${scrolled ? 'nav-glass' : 'bg-transparent border-b border-transparent'}`}>
+            <div className="container mx-auto px-4 lg:px-8">
+                <div className="flex justify-between items-center h-16">
+
+                    {/* Logo — always visible */}
+                    <Link to="/" className="flex items-center gap-2.5">
+                        <img src="/logo.png" alt="Portfolio Hub" className="h-8 w-8" />
+                        <span className="font-grotesk font-semibold text-ink-primary text-sm hidden sm:block tracking-tight">
+                            Portfolio<span className="text-accent-indigo">Hub</span>
+                        </span>
+                    </Link>
+
+                    {/* Desktop nav — only show section links when on a portfolio page */}
+                    {!isLanding && (
+                        <div className="hidden lg:flex items-center gap-1">
                             {navItems.map((item) => (
                                 <button
                                     key={item.path}
                                     onClick={() => handleNavClick(item)}
-                                    className="text-white hover:text-gray-200 transition-colors font-medium text-sm lg:text-base whitespace-nowrap"
+                                    className="px-4 py-2 text-sm font-medium text-ink-secondary hover:text-ink-primary hover:bg-obsidian-card rounded-lg transition-all duration-200"
+                                >
+                                    {item.label}
+                                </button>
+                            ))}
+                        </div>
+                    )}
+
+                    {/* Auth buttons */}
+                    <div className="hidden lg:flex items-center gap-3">
+                        {isLanding ? (
+                            /* Landing page: simple sign-in + get started */
+                            <>
+                                <Link to="/login"
+                                    className="px-4 py-2 text-sm font-medium text-ink-secondary hover:text-ink-primary transition-colors">
+                                    Sign in
+                                </Link>
+                                <Link to="/register"
+                                    className="btn-glow px-5 py-2 text-sm rounded-lg">
+                                    Get started free
+                                </Link>
+                            </>
+                        ) : !isAuthenticated ? (
+                            <>
+                                <Link to="/login"
+                                    className="px-4 py-2 text-sm font-medium text-ink-secondary hover:text-ink-primary border border-obsidian-border hover:border-accent-indigo/50 rounded-lg transition-all duration-200">
+                                    Login
+                                </Link>
+                                <Link to="/register"
+                                    className="btn-glow px-4 py-2 text-sm rounded-lg">
+                                    Register
+                                </Link>
+                            </>
+                        ) : (
+                            <button
+                                onClick={handleLogout}
+                                className="px-4 py-2 text-sm font-medium text-ink-secondary hover:text-red-400 border border-obsidian-border hover:border-red-500/40 rounded-lg transition-all duration-200">
+                                Logout
+                            </button>
+                        )}
+                    </div>
+
+                    {/* Mobile menu button */}
+                    <button
+                        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                        className="lg:hidden p-2 text-ink-secondary hover:text-ink-primary hover:bg-obsidian-card rounded-lg transition-colors"
+                        aria-label="Toggle menu"
+                    >
+                        {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+                    </button>
+                </div>
+
+                {/* Mobile menu */}
+                {isMobileMenuOpen && (
+                    <div className="lg:hidden py-4 border-t border-obsidian-border">
+                        <div className="flex flex-col gap-1">
+                            {!isLanding && navItems.map((item) => (
+                                <button
+                                    key={item.path}
+                                    onClick={() => { handleNavClick(item); setIsMobileMenuOpen(false); }}
+                                    className="text-left px-4 py-3 text-sm font-medium text-ink-secondary hover:text-ink-primary hover:bg-obsidian-card rounded-lg transition-colors"
                                 >
                                     {item.label}
                                 </button>
                             ))}
 
-                            {!isAuthenticated ? (
-                                <>
-                                    <Link
-                                        to="/login"
-                                        className="ml-2 lg:ml-4 px-3 lg:px-5 py-2 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-colors shadow text-sm lg:text-base"
-                                    >
-                                        Login
-                                    </Link>
-
-                                    <Link
-                                        to="/register"
-                                        className="ml-2 px-3 lg:px-5 py-2 rounded-lg bg-purple-600 text-white font-semibold hover:bg-purple-700 transition-colors shadow text-sm lg:text-base"
-                                    >
-                                        Register
-                                    </Link>
-                                </>
-                            ) : (
-                                <button
-                                    onClick={handleLogout}
-                                    className="ml-2 lg:ml-4 px-3 lg:px-5 py-2 rounded-lg bg-red-600 text-white font-semibold hover:bg-red-700 transition-colors shadow text-sm lg:text-base"
-                                >
-                                    Logout
-                                </button>
-                            )}
-                        </div>
-
-                        {/* Mobile Menu Button */}
-                        <button
-                            onClick={toggleMobileMenu}
-                            className="lg:hidden text-white p-2 hover:bg-purple-800 rounded-lg transition-colors"
-                            aria-label="Toggle menu"
-                        >
-                            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-                        </button>
-                    </div>
-
-                    {/* Mobile Navigation Menu */}
-                    {isMobileMenuOpen && (
-                        <div className="lg:hidden mt-4 pb-4 border-t border-purple-700 pt-4">
-                            <div className="flex flex-col space-y-3">
-                                {navItems.map((item) => (
+                            <div className="mt-3 pt-3 border-t border-obsidian-border flex flex-col gap-2">
+                                {!isAuthenticated ? (
+                                    <>
+                                        <Link to="/login" onClick={() => setIsMobileMenuOpen(false)}
+                                            className="px-4 py-2.5 text-sm font-medium text-center text-ink-secondary border border-obsidian-border rounded-lg hover:border-accent-indigo/50 hover:text-ink-primary transition-colors">
+                                            Sign in
+                                        </Link>
+                                        <Link to="/register" onClick={() => setIsMobileMenuOpen(false)}
+                                            className="btn-glow px-4 py-2.5 text-sm text-center rounded-lg">
+                                            {isLanding ? 'Get started free' : 'Register'}
+                                        </Link>
+                                    </>
+                                ) : (
                                     <button
-                                        key={item.path}
-                                        onClick={() => handleMobileNavClick(item)}
-                                        className="text-white hover:text-gray-200 hover:bg-purple-800 transition-colors font-medium text-base py-2 px-4 rounded-lg text-left"
-                                    >
-                                        {item.label}
+                                        onClick={() => { handleLogout(); setIsMobileMenuOpen(false); }}
+                                        className="px-4 py-2.5 text-sm font-medium text-red-400 border border-red-500/30 rounded-lg hover:bg-red-500/10 transition-colors">
+                                        Logout
                                     </button>
-                                ))}
-
-                                <div className="pt-2 border-t border-purple-700">
-                                    {!isAuthenticated ? (
-                                        <>
-                                            <Link
-                                                to="/login"
-                                                onClick={() => setIsMobileMenuOpen(false)}
-                                                className="block w-full px-4 py-2 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-colors shadow text-center mb-2"
-                                            >
-                                                Login
-                                            </Link>
-
-                                            <Link
-                                                to="/register"
-                                                onClick={() => setIsMobileMenuOpen(false)}
-                                                className="block w-full px-4 py-2 rounded-lg bg-purple-600 text-white font-semibold hover:bg-purple-700 transition-colors shadow text-center"
-                                            >
-                                                Register
-                                            </Link>
-                                        </>
-                                    ) : (
-                                        <button
-                                            onClick={() => {
-                                                handleLogout();
-                                                setIsMobileMenuOpen(false);
-                                            }}
-                                            className="block w-full px-4 py-2 rounded-lg bg-red-600 text-white font-semibold hover:bg-red-700 transition-colors shadow text-center"
-                                        >
-                                            Logout
-                                        </button>
-                                    )}
-                                </div>
+                                )}
                             </div>
                         </div>
-                    )}
-                </div>
+                    </div>
+                )}
             </div>
         </nav>
     );
-}
+};
 
 export default Navbar;
