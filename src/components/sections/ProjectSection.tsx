@@ -119,7 +119,7 @@ const ProjectSection: React.FC = () => {
                                     </div>
                                 )}
                                 <div className="flex-1 min-w-0">
-                                <div className="flex flex-col md:flex-row md:items-start md:justify-between mb-4 gap-3">
+                                <div className={`flex flex-col md:flex-row md:items-start md:justify-between mb-4 gap-3 ${isMe ? 'pr-24' : ''}`}>
                                     <div>
                                         <h3 className="font-grotesk text-xl font-bold text-ink-primary mb-2">{project.title}</h3>
                                         {(safeHref(project.live_url) || safeHref(project.code_url)) && (

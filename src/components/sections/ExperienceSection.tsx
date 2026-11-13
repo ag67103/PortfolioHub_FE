@@ -109,7 +109,7 @@ const ExperienceSection: React.FC = () => {
                                         </div>
                                     )}
 
-                                    <div className="flex flex-col md:flex-row md:items-start md:justify-between mb-4 gap-2">
+                                    <div className={`flex flex-col md:flex-row md:items-start md:justify-between mb-4 gap-2 ${isMe ? 'pr-24' : ''}`}>
                                         <div>
                                             <h3 className="font-grotesk text-lg font-bold text-ink-primary">{exp.title}</h3>
                                             <p className="text-accent-light font-medium text-sm mt-0.5">{exp.company}</p>

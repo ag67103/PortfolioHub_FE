@@ -98,7 +98,7 @@ const CertificationSection = () => {
                                     </div>
                                 )}
 
-                                <div className="flex items-start gap-3 mb-3">
+                                <div className={`flex items-start gap-3 mb-3 ${isMe ? 'pr-24' : ''}`}>
                                     <div className="p-2 bg-accent-indigo/10 border border-accent-indigo/20 rounded-lg shrink-0 mt-0.5">
                                         <Award className="w-4 h-4 text-accent-light" />
                                     </div>

@@ -86,7 +86,7 @@ const EducationSection = () => {
                                     <div className="p-2 bg-accent-indigo/10 border border-accent-indigo/20 rounded-lg shrink-0">
                                         <GraduationCap className="w-5 h-5 text-accent-light" />
                                     </div>
-                                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between w-full gap-2">
+                                    <div className={`flex flex-col sm:flex-row sm:items-center sm:justify-between w-full gap-2 ${isMe ? 'pr-24' : ''}`}>
                                         <div>
                                             <h3 className="font-grotesk text-lg font-bold text-ink-primary">{education.degree}</h3>
                                             <p className="text-accent-light font-medium text-sm">{education.institution}</p>

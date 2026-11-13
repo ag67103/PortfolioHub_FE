@@ -96,7 +96,7 @@ const AwardsSection = () => {
                                         <Trophy className="w-4 h-4 text-accent-light" />
                                     </div>
                                     <div className="flex-1 min-w-0">
-                                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-1">
+                                        <div className={`flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-1 ${isMe ? 'pr-24' : ''}`}>
                                             <h3 className="font-grotesk font-bold text-ink-primary">{award.name}</h3>
                                             <span className="text-xs text-ink-muted bg-obsidian-surface border border-obsidian-border px-2.5 py-1 rounded-full whitespace-nowrap self-start sm:self-auto">
                                                 {formatDate(award.issue_date)}
