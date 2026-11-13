@@ -126,7 +126,7 @@ const ProjectAddEditForm: React.FC<ProjectAddEditFormProps> = ({ isAdd, selected
         <div className="w-full">
             <div className="flex items-center gap-3 mb-6">
                 <div className="p-2 bg-accent-indigo/10 border border-accent-indigo/20 rounded-xl">
-                    <FolderOpen className="w-5 h-5 text-accent-indigo" />
+                    <FolderOpen className="w-5 h-5 text-accent-light" />
                 </div>
                 <h2 className="font-grotesk text-xl font-bold text-ink-primary">{isAdd ? 'Add Project' : 'Edit Project'}</h2>
             </div>

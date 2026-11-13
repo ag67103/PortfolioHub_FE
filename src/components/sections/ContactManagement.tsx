@@ -547,7 +547,7 @@ const ContactManagement = () => {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
                     <div className="obs-card p-5 flex items-center gap-4">
                         <div className="p-3 bg-accent-indigo/10 border border-accent-indigo/20 rounded-xl shrink-0">
-                            <Mail className="w-6 h-6 text-accent-indigo" />
+                            <Mail className="w-6 h-6 text-accent-light" />
                         </div>
                         <div>
                             <p className="text-ink-muted text-xs font-medium uppercase tracking-wide mb-1">Total Messages</p>
@@ -621,7 +621,7 @@ const ContactManagement = () => {
                                         onClick={() => setFilter(filterType)}
                                         className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 border ${
                                             filterType === filter
-                                                ? 'bg-accent-indigo/15 text-accent-indigo border-accent-indigo/40'
+                                                ? 'bg-accent-indigo/15 text-accent-light border-accent-indigo/40'
                                                 : 'bg-obsidian-surface text-ink-muted border-obsidian-border hover:border-accent-indigo/30 hover:text-ink-secondary'
                                         }`}
                                     >
@@ -673,7 +673,7 @@ const ContactManagement = () => {
                                                         : 'bg-obsidian-surface border-obsidian-border hover:border-accent-indigo/25 hover:bg-accent-indigo/5'
                                                 }`}
                                             >
-                                                <div className="flex h-10 w-10 flex-none items-center justify-center rounded-full bg-accent-indigo/15 border border-accent-indigo/25 text-sm font-semibold uppercase text-accent-indigo">
+                                                <div className="flex h-10 w-10 flex-none items-center justify-center rounded-full bg-accent-indigo/15 border border-accent-indigo/25 text-sm font-semibold uppercase text-accent-light">
                                                     {initials(displayName || partnerEmail || undefined)}
                                                 </div>
 
@@ -782,7 +782,7 @@ const ContactManagement = () => {
                                             return (
                                                 <div key={messageKey} className={`flex ${isSentByMe ? 'justify-end' : 'justify-start'}`}>
                                                     <div className={`flex max-w-[80%] items-end gap-2.5 ${isSentByMe ? 'flex-row-reverse' : ''}`}>
-                                                        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-accent-indigo/15 border border-accent-indigo/25 text-xs font-semibold uppercase text-accent-indigo shrink-0">
+                                                        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-accent-indigo/15 border border-accent-indigo/25 text-xs font-semibold uppercase text-accent-light shrink-0">
                                                             {initials(
                                                                 isSentByMe ? (currentUser?.first_name || currentUser?.email || '') : message.senderName,
                                                                 isSentByMe ? currentUser?.email : message.senderEmail
@@ -815,7 +815,7 @@ const ContactManagement = () => {
                                                                     {readingMessageIds.includes(((message as any)._id ?? (message as any).id) ?? '') ? (
                                                                         <div className="flex items-center gap-1 rounded-full bg-accent-indigo/20 px-2 py-0.5">
                                                                             <div className="h-1.5 w-1.5 animate-pulse rounded-full bg-accent-indigo"></div>
-                                                                            <span className="text-xs font-medium text-accent-indigo">Reading…</span>
+                                                                            <span className="text-xs font-medium text-accent-light">Reading…</span>
                                                                         </div>
                                                                     ) : !((message as any).isRead ?? (message as any).read ?? false) ? (
                                                                         <div className="flex items-center gap-1 rounded-full bg-emerald-500/20 border border-emerald-500/30 px-2 py-0.5">

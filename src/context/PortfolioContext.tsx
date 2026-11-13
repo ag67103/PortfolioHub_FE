@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useContext, useEffect, useState, Dispatch, SetStateAction } from "react";
+import { createContext, ReactNode, useContext, useEffect, useRef, useState, Dispatch, SetStateAction } from "react";
 import { Award, Certification, Education, Experience, Message, MessageCount, Project, Skill } from "../services/modal";
 import { getAwardsByUserId, getCertificationsByUserId, getEducationsByUserId, getExperiencesByUserId, getMessageCounts, getProjectsByUserId, getReceivedMessagesList, getSkillsByUserId } from "../services/api";
 import { useAuth } from "./AuthContext";
@@ -137,6 +137,17 @@ export const PortfolioProvider = ({ children }: { children: ReactNode }) => {
             setIsMessageCountLoading(true);
         }
     }, [isAuthenticated, currentUser]);
+
+    // A different profile was opened: reload every section for it
+    const loadedProfileId = useRef<string | null>(null);
+    useEffect(() => {
+        const id = currentUser?.id ?? null;
+        if (id && loadedProfileId.current && loadedProfileId.current !== id) {
+            setIsSkillLoading(true); setIsProjectLoading(true); setIsExperienceLoading(true);
+            setIsEducationLoading(true); setIsCertificationLoading(true); setIsAwardLoading(true);
+        }
+        loadedProfileId.current = id;
+    }, [currentUser?.id]);
 
     useEffect(() => {
         const currentUserId = currentUser?.id;

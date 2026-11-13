@@ -12,7 +12,7 @@ const Login: React.FC = () => {
             <div className="obs-card w-full max-w-md mx-4 p-8 relative z-10">
                 <div className="text-center mb-8">
                     <div className="inline-flex items-center justify-center w-12 h-12 bg-accent-indigo/10 border border-accent-indigo/30 rounded-xl mb-4">
-                        <span className="font-grotesk font-bold text-accent-indigo text-lg">PH</span>
+                        <span className="font-grotesk font-bold text-accent-light text-lg">PH</span>
                     </div>
                     <h2 className="font-grotesk text-2xl font-bold text-ink-primary">Welcome back</h2>
                     <p className="text-ink-muted text-sm mt-1">Sign in to your portfolio</p>
@@ -22,7 +22,7 @@ const Login: React.FC = () => {
 
                 <p className="mt-6 text-center text-ink-muted text-sm">
                     Don't have an account?{' '}
-                    <Link to="/register" className="text-accent-indigo hover:text-accent-cyan font-semibold transition-colors">
+                    <Link to="/register" className="text-accent-light hover:text-accent-cyan font-semibold transition-colors">
                         Register
                     </Link>
                 </p>

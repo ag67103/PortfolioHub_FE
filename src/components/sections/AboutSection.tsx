@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
-import { User, Award, GraduationCap, FileText, Edit2, Globe, Mail, Phone, Code2, Briefcase, Bird, Camera, Binary } from 'lucide-react';
+import { FileText, User, Award, GraduationCap, Edit2, Globe, Mail, Phone, Code2, Briefcase, Bird, Camera, Binary } from 'lucide-react';
 import { ModalOverlay } from '../forms/ModalOverlay';
 import EditPortfolioForm from '../forms/EditPortfolioForm';
 
@@ -82,7 +82,7 @@ const AboutSection: React.FC = () => {
                       {`${currentUser.first_name || ''} ${currentUser.last_name || ''}`.trim()}
                     </h3>
                     {currentUser.portfolio_title && (
-                      <p className="text-accent-indigo font-medium text-lg mb-2">{currentUser.portfolio_title}</p>
+                      <p className="text-accent-light font-medium text-lg mb-2">{currentUser.portfolio_title}</p>
                     )}
                     {currentUser.portfolio_description && (
                       <div className="text-ink-secondary max-w-3xl mx-auto leading-relaxed space-y-4">{String(currentUser.portfolio_description).split(/\n+/).filter((l: string) => l.trim()).map((para: string, i: number) => <p key={i}>{para}</p>)}</div>
@@ -91,7 +91,7 @@ const AboutSection: React.FC = () => {
                 ) : (
                   <div className="max-w-lg mx-auto">
                     <div className="inline-flex items-center justify-center w-14 h-14 bg-accent-indigo/10 border border-accent-indigo/30 rounded-2xl mb-5">
-                      <User className="w-7 h-7 text-accent-indigo" />
+                      <User className="w-7 h-7 text-accent-light" />
                     </div>
                     <h3 className="font-grotesk text-2xl font-bold text-ink-primary mb-3">
                       {isMe ? 'Complete Your Portfolio' : 'Profile Coming Soon'}
@@ -116,7 +116,7 @@ const AboutSection: React.FC = () => {
                 <div className="bg-obsidian-surface border border-obsidian-border rounded-xl p-6 hover:border-accent-indigo/40 transition-all duration-300">
                   <div className="flex items-center gap-3 mb-4">
                     <div className="p-2 bg-accent-indigo/10 rounded-lg">
-                      <GraduationCap className="w-5 h-5 text-accent-indigo" />
+                      <GraduationCap className="w-5 h-5 text-accent-light" />
                     </div>
                     <h4 className="font-grotesk font-semibold text-ink-primary">Education</h4>
                   </div>
@@ -131,7 +131,7 @@ const AboutSection: React.FC = () => {
                 <div className="bg-obsidian-surface border border-obsidian-border rounded-xl p-6 hover:border-accent-indigo/40 transition-all duration-300">
                   <div className="flex items-center gap-3 mb-4">
                     <div className="p-2 bg-accent-indigo/10 rounded-lg">
-                      <Award className="w-5 h-5 text-accent-indigo" />
+                      <Award className="w-5 h-5 text-accent-light" />
                     </div>
                     <h4 className="font-grotesk font-semibold text-ink-primary">Top Achievement</h4>
                   </div>
@@ -146,7 +146,7 @@ const AboutSection: React.FC = () => {
                 <div className="bg-obsidian-surface border border-obsidian-border rounded-xl p-6 hover:border-accent-indigo/40 transition-all duration-300">
                   <div className="flex items-center gap-3 mb-4">
                     <div className="p-2 bg-accent-indigo/10 rounded-lg">
-                      <User className="w-5 h-5 text-accent-indigo" />
+                      <User className="w-5 h-5 text-accent-light" />
                     </div>
                     <h4 className="font-grotesk font-semibold text-ink-primary">Connect</h4>
                   </div>
@@ -163,7 +163,7 @@ const AboutSection: React.FC = () => {
                             href={link.href}
                             target={isExternal ? '_blank' : undefined}
                             rel={isExternal ? 'noopener noreferrer' : undefined}
-                            className="flex items-center gap-2.5 text-ink-secondary hover:text-accent-indigo transition-colors py-1 group/link"
+                            className="flex items-center gap-2.5 text-ink-secondary hover:text-accent-light transition-colors py-1 group/link"
                           >
                             <IconComponent className="w-4 h-4 shrink-0" />
                             <span className="text-sm font-medium truncate">
@@ -176,23 +176,6 @@ const AboutSection: React.FC = () => {
                   )}
                 </div>
               </div>
-
-              {/* Certifications row */}
-              {currentUser.portfolio_certifications?.length > 0 && (
-                <div className="bg-obsidian-surface border border-obsidian-border rounded-xl p-6">
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="p-2 bg-accent-indigo/10 rounded-lg">
-                      <FileText className="w-5 h-5 text-accent-indigo" />
-                    </div>
-                    <h4 className="font-grotesk font-semibold text-ink-primary">Certifications</h4>
-                  </div>
-                  <div className="flex flex-wrap gap-2">
-                    {currentUser.portfolio_certifications.map((cert: string, i: number) => (
-                      <span key={i} className="obs-tag">{cert}</span>
-                    ))}
-                  </div>
-                </div>
-              )}
             </div>
           ) : (
             /* Logged-out marketing state */
@@ -214,7 +197,7 @@ const AboutSection: React.FC = () => {
                 ].map(({ icon: Icon, title, desc, note }) => (
                   <div key={title} className="obs-card p-8">
                     <div className="p-3 bg-accent-indigo/10 border border-accent-indigo/20 rounded-xl inline-flex mb-5">
-                      <Icon className="w-6 h-6 text-accent-indigo" />
+                      <Icon className="w-6 h-6 text-accent-light" />
                     </div>
                     <h3 className="font-grotesk text-xl font-bold text-ink-primary mb-3">{title}</h3>
                     <p className="text-ink-secondary leading-relaxed mb-4">{desc}</p>

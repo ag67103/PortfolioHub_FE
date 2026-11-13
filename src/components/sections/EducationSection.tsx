@@ -66,12 +66,14 @@ const EducationSection = () => {
                                 {isMe && (
                                     <div className="absolute top-5 right-5 flex gap-2 opacity-100 [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover:opacity-100 focus-within:opacity-100 transition-opacity">
                                         <button
+                                            aria-label={`Edit ${(education as any).title || (education as any).name || (education as any).institution || 'entry'}`}
                                             className="p-2 text-ink-muted hover:text-ink-primary hover:bg-obsidian-border rounded-lg transition-colors"
                                             onClick={() => { setSelectedEducation(education); setShowEditForm(true); }}
                                         >
                                             <Edit2 size={14} />
                                         </button>
                                         <button
+                                            aria-label={`Delete ${(education as any).title || (education as any).name || (education as any).institution || 'entry'}`}
                                             className="p-2 text-ink-muted hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
                                             onClick={() => { setSelectedEducation(education); setShowDeleteConfirmationModal(true); }}
                                         >
@@ -82,12 +84,12 @@ const EducationSection = () => {
 
                                 <div className="flex items-center gap-3 mb-4">
                                     <div className="p-2 bg-accent-indigo/10 border border-accent-indigo/20 rounded-lg shrink-0">
-                                        <GraduationCap className="w-5 h-5 text-accent-indigo" />
+                                        <GraduationCap className="w-5 h-5 text-accent-light" />
                                     </div>
                                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between w-full gap-2">
                                         <div>
                                             <h3 className="font-grotesk text-lg font-bold text-ink-primary">{education.degree}</h3>
-                                            <p className="text-accent-indigo font-medium text-sm">{education.institution}</p>
+                                            <p className="text-accent-light font-medium text-sm">{education.institution}</p>
                                         </div>
                                         <span className="text-xs font-medium text-ink-muted bg-obsidian-surface border border-obsidian-border px-3 py-1.5 rounded-full whitespace-nowrap self-start sm:self-auto">
                                             {getEducationDuration(education.start_date, education.end_date)}
@@ -120,7 +122,7 @@ const EducationSection = () => {
                 ) : (
                     <div className="obs-card p-12 text-center max-w-lg mx-auto">
                         <div className="inline-flex items-center justify-center w-14 h-14 bg-accent-indigo/10 border border-accent-indigo/30 rounded-2xl mb-5">
-                            <GraduationCap className="w-7 h-7 text-accent-indigo" />
+                            <GraduationCap className="w-7 h-7 text-accent-light" />
                         </div>
                         <h3 className="font-grotesk text-xl font-bold text-ink-primary mb-2">No Education Added Yet</h3>
                         <p className="text-ink-secondary mb-6 text-sm leading-relaxed">

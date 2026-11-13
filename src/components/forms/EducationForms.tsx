@@ -80,7 +80,7 @@ const EducationAddEditForm: React.FC<EducationAddEditFormProps> = ({ isAdd, sele
         <div className="w-full">
             <div className="flex items-center gap-3 mb-6">
                 <div className="p-2 bg-accent-indigo/10 border border-accent-indigo/20 rounded-xl">
-                    <GraduationCap className="w-5 h-5 text-accent-indigo" />
+                    <GraduationCap className="w-5 h-5 text-accent-light" />
                 </div>
                 <h2 className="font-grotesk text-xl font-bold text-ink-primary">{isAdd ? 'Add Education' : 'Edit Education'}</h2>
             </div>

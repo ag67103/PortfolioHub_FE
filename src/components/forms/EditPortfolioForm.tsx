@@ -27,7 +27,10 @@ const EditPortfolioModal: React.FC<EditPortfolioFormProps> = ({ portfolioData, s
     linkedin_url: portfolioData?.linkedin_url || '',
     leetcode_url: portfolioData?.leetcode_url || '',
     website_url: portfolioData?.website_url || '',
-    phone: portfolioData?.phone || portfolioData?.phone_number || ''
+    phone: portfolioData?.phone || portfolioData?.phone_number || '',
+    address: portfolioData?.address || '',
+    slug: portfolioData?.slug || '',
+    open_to_work: !!portfolioData?.open_to_work
   });
 
   // Track if custom title mode is active
@@ -124,7 +127,10 @@ const EditPortfolioModal: React.FC<EditPortfolioFormProps> = ({ portfolioData, s
       formData.linkedin_url !== (portfolioData?.linkedin_url || '') ||
       formData.leetcode_url !== (portfolioData?.leetcode_url || '') ||
       formData.website_url !== (portfolioData?.website_url || '') ||
-      formData.phone !== (portfolioData?.phone || portfolioData?.phone_number || '')
+      formData.phone !== (portfolioData?.phone || portfolioData?.phone_number || '') ||
+      formData.address !== (portfolioData?.address || '') ||
+      formData.slug !== (portfolioData?.slug || '') ||
+      formData.open_to_work !== !!portfolioData?.open_to_work
     ) {
       setIsSubmitActive(true);
     } else {
@@ -142,7 +148,16 @@ const EditPortfolioModal: React.FC<EditPortfolioFormProps> = ({ portfolioData, s
         portfolio_education: formData.portfolio_education ? [formData.portfolio_education] : [],
         portfolio_certifications: formData.portfolio_certifications,
         portfolio_awards: formData.portfolio_awards,
-        phone: formData.phone?.trim() || null
+        github_url: formData.github_url?.trim() || null,
+        twitter_url: formData.twitter_url?.trim() || null,
+        instagram_url: formData.instagram_url?.trim() || null,
+        linkedin_url: formData.linkedin_url?.trim() || null,
+        leetcode_url: formData.leetcode_url?.trim() || null,
+        website_url: formData.website_url?.trim() || null,
+        phone: formData.phone?.trim() || null,
+        address: formData.address?.trim() || null,
+        slug: formData.slug?.trim().toLowerCase() || null,
+        open_to_work: formData.open_to_work
       };
 
       const response = await updatePortfolio(portfolioUpdateData);
@@ -169,14 +184,14 @@ const EditPortfolioModal: React.FC<EditPortfolioFormProps> = ({ portfolioData, s
     <div className="w-full">
       <div className="flex items-center gap-3 mb-6">
         <div className="p-2 bg-accent-indigo/10 border border-accent-indigo/20 rounded-xl">
-          <Edit3 className="w-5 h-5 text-accent-indigo" />
+          <Edit3 className="w-5 h-5 text-accent-light" />
         </div>
         <h2 className="font-grotesk text-xl font-bold text-ink-primary">Edit Portfolio</h2>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className={sectionCls}>
-          <h3 className={sectionHeadCls}><User className="w-4 h-4 text-accent-indigo" /> Personal Information</h3>
+          <h3 className={sectionHeadCls}><User className="w-4 h-4 text-accent-light" /> Personal Information</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className={labelCls}>First Name</label>
@@ -191,6 +206,10 @@ const EditPortfolioModal: React.FC<EditPortfolioFormProps> = ({ portfolioData, s
               <input type="text" value={formData.last_name} onChange={(e) => setFormData({ ...formData, last_name: e.target.value })} className={inputCls} placeholder="Enter last name" />
             </div>
             <div>
+              <label htmlFor="pf-location" className={labelCls}>Location <span className="text-ink-muted text-xs">(optional)</span></label>
+              <input id="pf-location" type="text" value={formData.address} onChange={(e) => setFormData({ ...formData, address: e.target.value })} className={inputCls} placeholder="City, Country" />
+            </div>
+            <div>
               <label className={labelCls}>Phone Number <span className="text-ink-muted text-xs">(optional)</span></label>
               <input type="tel" value={formData.phone} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} className={inputCls} placeholder="Enter phone number" />
             </div>
@@ -198,7 +217,26 @@ const EditPortfolioModal: React.FC<EditPortfolioFormProps> = ({ portfolioData, s
         </div>
 
         <div className={sectionCls}>
-          <h3 className={sectionHeadCls}><Briefcase className="w-4 h-4 text-accent-indigo" /> Professional Information</h3>
+          <h3 className={sectionHeadCls}><User className="w-4 h-4 text-accent-light" /> Public link &amp; availability</h3>
+          <div>
+            <label htmlFor="pf-slug" className={labelCls}>Link name <span className="text-ink-muted text-xs">(optional)</span></label>
+            <div className="flex items-stretch">
+              <span className="px-3 inline-flex items-center rounded-l-lg border border-r-0 border-obsidian-border bg-obsidian-card text-ink-muted text-sm whitespace-nowrap">{window.location.host}/u/</span>
+              <input id="pf-slug" type="text" value={formData.slug} onChange={(e) => setFormData({ ...formData, slug: e.target.value.toLowerCase() })}
+                className={`${inputCls} rounded-l-none`} placeholder={[formData.first_name, formData.last_name].filter(Boolean).join('-').toLowerCase().replace(/[^a-z0-9-]+/g, '-').replace(/^-+|-+$/g, '') || 'your-name'}
+                pattern="[a-z0-9]+(-[a-z0-9]+)*" minLength={3} maxLength={40} aria-describedby="pf-slug-help" />
+            </div>
+            <p id="pf-slug-help" className="text-xs text-ink-muted mt-1.5">3-40 characters: lowercase letters, numbers and hyphens. This is the short link you share (and what shows in link previews).</p>
+          </div>
+          <label className="flex items-center gap-3 cursor-pointer select-none">
+            <input type="checkbox" checked={formData.open_to_work} onChange={(e) => setFormData({ ...formData, open_to_work: e.target.checked })}
+              className="w-4 h-4 accent-indigo-500" />
+            <span className="text-sm text-ink-secondary">Show an "Open to opportunities" badge on my portfolio</span>
+          </label>
+        </div>
+
+        <div className={sectionCls}>
+          <h3 className={sectionHeadCls}><Briefcase className="w-4 h-4 text-accent-light" /> Professional Information</h3>
           <div>
             <label className={labelCls}>Professional Title</label>
             <select
@@ -224,7 +262,7 @@ const EditPortfolioModal: React.FC<EditPortfolioFormProps> = ({ portfolioData, s
         </div>
 
         <div className={sectionCls}>
-          <h3 className={sectionHeadCls}><GraduationCap className="w-4 h-4 text-accent-indigo" /> Education</h3>
+          <h3 className={sectionHeadCls}><GraduationCap className="w-4 h-4 text-accent-light" /> Education</h3>
           <div>
             <label className={labelCls}>Primary Education</label>
             <select value={formData.portfolio_education || ''} onChange={(e) => setFormData({ ...formData, portfolio_education: e.target.value })} className={selectCls}>
@@ -235,7 +273,7 @@ const EditPortfolioModal: React.FC<EditPortfolioFormProps> = ({ portfolioData, s
         </div>
 
         <div className={sectionCls}>
-          <h3 className={sectionHeadCls}><FileText className="w-4 h-4 text-accent-indigo" /> Certifications</h3>
+          <h3 className={sectionHeadCls}><FileText className="w-4 h-4 text-accent-light" /> Certifications</h3>
           <div className="space-y-2">
             {formData.portfolio_certifications.map((item: string, index: number) => (
               <div key={index} className="flex gap-2">
@@ -248,14 +286,14 @@ const EditPortfolioModal: React.FC<EditPortfolioFormProps> = ({ portfolioData, s
                 <button type="button" onClick={() => removeListItem('portfolio_certifications', index)} className="px-3 py-2 text-xs text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-lg border border-red-500/30 transition-colors">Remove</button>
               </div>
             ))}
-            <button type="button" onClick={() => addListItem('portfolio_certifications')} disabled={getAvailableOptions('portfolio_certifications', certificationOptions).length === 0} className="text-xs px-3 py-2 text-accent-indigo hover:bg-accent-indigo/10 rounded-lg border border-accent-indigo/30 transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
+            <button type="button" onClick={() => addListItem('portfolio_certifications')} disabled={getAvailableOptions('portfolio_certifications', certificationOptions).length === 0} className="text-xs px-3 py-2 text-accent-light hover:bg-accent-indigo/10 rounded-lg border border-accent-indigo/30 transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
               + Add Certification
             </button>
           </div>
         </div>
 
         <div className={sectionCls}>
-          <h3 className={sectionHeadCls}><Award className="w-4 h-4 text-accent-indigo" /> Awards</h3>
+          <h3 className={sectionHeadCls}><Award className="w-4 h-4 text-accent-light" /> Awards</h3>
           <div className="space-y-2">
             {formData.portfolio_awards.map((item: string, index: number) => (
               <div key={index} className="flex gap-2">
@@ -268,14 +306,14 @@ const EditPortfolioModal: React.FC<EditPortfolioFormProps> = ({ portfolioData, s
                 <button type="button" onClick={() => removeListItem('portfolio_awards', index)} className="px-3 py-2 text-xs text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-lg border border-red-500/30 transition-colors">Remove</button>
               </div>
             ))}
-            <button type="button" onClick={() => addListItem('portfolio_awards')} disabled={getAvailableOptions('portfolio_awards', awardOptions).length === 0} className="text-xs px-3 py-2 text-accent-indigo hover:bg-accent-indigo/10 rounded-lg border border-accent-indigo/30 transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
+            <button type="button" onClick={() => addListItem('portfolio_awards')} disabled={getAvailableOptions('portfolio_awards', awardOptions).length === 0} className="text-xs px-3 py-2 text-accent-light hover:bg-accent-indigo/10 rounded-lg border border-accent-indigo/30 transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
               + Add Award
             </button>
           </div>
         </div>
 
         <div className={sectionCls}>
-          <h3 className={sectionHeadCls}><FileText className="w-4 h-4 text-accent-indigo" /> Social &amp; Links</h3>
+          <h3 className={sectionHeadCls}><FileText className="w-4 h-4 text-accent-light" /> Social &amp; Links</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className={labelCls}>GitHub Profile</label>

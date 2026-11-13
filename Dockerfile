@@ -15,6 +15,11 @@ ENV REACT_APP_API_BASE_URL=$REACT_APP_API_BASE_URL \
 RUN npm run build
 
 FROM nginx:1.27-alpine
+# Where link-preview crawlers are sent for /u/<slug> pages (same API the app talks to)
+ARG REACT_APP_API_BASE_URL=https://portfoliohub-api.thikana.cc
 COPY nginx.conf /etc/nginx/conf.d/default.conf
+RUN API_HOST=$(echo "$REACT_APP_API_BASE_URL" | sed -E 's#^https?://##; s#/.*$##') \
+ && sed -i "s#__API_ORIGIN__#${REACT_APP_API_BASE_URL%/}#; s#__API_HOST__#${API_HOST}#" /etc/nginx/conf.d/default.conf \
+ && nginx -t
 COPY --from=build /app/build /usr/share/nginx/html
 EXPOSE 80

@@ -56,7 +56,7 @@ const AwardsSection = () => {
                 {awards.length === 0 ? (
                     <div className="obs-card p-12 text-center max-w-lg mx-auto">
                         <div className="inline-flex items-center justify-center w-14 h-14 bg-accent-indigo/10 border border-accent-indigo/30 rounded-2xl mb-5">
-                            <Trophy className="w-7 h-7 text-accent-indigo" />
+                            <Trophy className="w-7 h-7 text-accent-light" />
                         </div>
                         <h3 className="font-grotesk text-xl font-bold text-ink-primary mb-2">No Awards Yet</h3>
                         <p className="text-ink-secondary mb-6 text-sm leading-relaxed">
@@ -75,12 +75,14 @@ const AwardsSection = () => {
                                 {isMe && (
                                     <div className="absolute top-4 right-4 flex gap-2 opacity-100 [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover:opacity-100 focus-within:opacity-100 transition-opacity">
                                         <button
+                                            aria-label={`Edit ${(award as any).title || (award as any).name || (award as any).institution || 'entry'}`}
                                             className="p-2 text-ink-muted hover:text-ink-primary hover:bg-obsidian-border rounded-lg transition-colors"
                                             onClick={() => { setSelectedAward(award); setShowEditForm(true); }}
                                         >
                                             <Edit2 size={14} />
                                         </button>
                                         <button
+                                            aria-label={`Delete ${(award as any).title || (award as any).name || (award as any).institution || 'entry'}`}
                                             className="p-2 text-ink-muted hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
                                             onClick={() => { setSelectedAward(award); setShowDeleteConfirmationModal(true); }}
                                         >
@@ -91,7 +93,7 @@ const AwardsSection = () => {
 
                                 <div className="flex items-start gap-3">
                                     <div className="p-2 bg-accent-indigo/10 border border-accent-indigo/20 rounded-lg shrink-0 mt-0.5">
-                                        <Trophy className="w-4 h-4 text-accent-indigo" />
+                                        <Trophy className="w-4 h-4 text-accent-light" />
                                     </div>
                                     <div className="flex-1 min-w-0">
                                         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-1">
@@ -100,7 +102,7 @@ const AwardsSection = () => {
                                                 {formatDate(award.issue_date)}
                                             </span>
                                         </div>
-                                        <p className="text-accent-indigo text-sm font-medium mb-2">{award.issuer}</p>
+                                        <p className="text-accent-light text-sm font-medium mb-2">{award.issuer}</p>
                                         {award.description && (
                                             <p className="text-ink-secondary text-sm leading-relaxed mb-3">{award.description}</p>
                                         )}

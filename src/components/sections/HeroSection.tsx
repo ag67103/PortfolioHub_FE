@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { useParams } from "react-router-dom";
-import { Check, Download, Mail, Share2, Edit2 } from "lucide-react";
+import { Check, Download, Mail, Share2, Edit2, MapPin, Eye } from "lucide-react";
+import { safeHref } from "../../utils/utility";
 import { ModalOverlay } from "../forms/ModalOverlay";
 import EditPortfolioForm from "../forms/EditPortfolioForm";
 import { downloadResume } from "../../services/api";
@@ -27,7 +28,9 @@ const HeroSection = () => {
     const handleShare = () => {
         const uid = currentUser?.id;
         if (uid) {
-            navigator.clipboard.writeText(`${window.location.origin}/user/${uid}`);
+            // Prefer the short public link (/u/<name>) when the owner has set one
+            const path = currentUser?.slug ? `/u/${currentUser.slug}` : `/user/${uid}`;
+            navigator.clipboard.writeText(`${window.location.origin}${path}`);
             setShowCopied(true);
             setTimeout(() => setShowCopied(false), 2000);
         }
@@ -42,6 +45,17 @@ const HeroSection = () => {
             alert(error.message || 'Failed to download resume.');
         }
     };
+
+    const firstSentence = (text?: string) => {
+        const first = (text || '').trim().split('\n')[0];
+        const m = first.match(/^.*?[.!?](?=\s|$)/);
+        return m ? m[0] : first;
+    };
+    const socials = [
+        { label: 'GitHub', url: currentUser?.github_url },
+        { label: 'LinkedIn', url: currentUser?.linkedin_url },
+        { label: 'LeetCode', url: currentUser?.leetcode_url },
+    ].filter(l => l.url);
 
     if (!currentUser) return null;
 
@@ -95,14 +109,29 @@ const HeroSection = () => {
                                 </div>
 
                                 {currentUser.portfolio_title && (
-                                    <p className="text-lg text-accent-indigo font-medium mb-2">
+                                    <p className="text-lg text-accent-light font-medium mb-2">
                                         {currentUser.portfolio_title}
                                     </p>
                                 )}
 
+                                {(currentUser.open_to_work || currentUser.address) && (
+                                    <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mb-3 text-sm">
+                                        {currentUser.open_to_work && (
+                                            <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-green-500/10 border border-green-500/30 text-green-300 font-medium">
+                                                <span className="w-2 h-2 rounded-full bg-green-400" aria-hidden="true" /> Open to opportunities
+                                            </span>
+                                        )}
+                                        {currentUser.address && (
+                                            <span className="inline-flex items-center gap-1.5 text-ink-secondary">
+                                                <MapPin size={14} aria-hidden="true" /> {currentUser.address}
+                                            </span>
+                                        )}
+                                    </div>
+                                )}
+
                                 {currentUser.portfolio_description && (
                                     <p className="text-ink-secondary max-w-xl leading-relaxed mb-5 text-sm lg:text-base">
-                                        {currentUser.portfolio_description.split('\n')[0]}
+                                        {firstSentence(currentUser.portfolio_description)}
                                     </p>
                                 )}
 
@@ -111,12 +140,11 @@ const HeroSection = () => {
                                         className="btn-glow flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm">
                                         <Download size={14} /> Resume
                                     </button>
-                                    {!isMe && isValidUser && (
-                                        <button
-                                            onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+                                    {currentUser.email && (
+                                        <a href={`mailto:${currentUser.email}`}
                                             className="btn-ghost flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm">
-                                            <Mail size={14} /> Contact
-                                        </button>
+                                            <Mail size={14} /> Email me
+                                        </a>
                                     )}
                                     <button onClick={handleShare}
                                         className="btn-ghost flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm">
@@ -125,6 +153,19 @@ const HeroSection = () => {
                                             : <><Share2 size={14} /> Share</>}
                                     </button>
                                 </div>
+
+                                {socials.length > 0 && (
+                                    <ul className="flex flex-wrap gap-x-5 gap-y-2 mt-5 text-sm" aria-label="Profiles">
+                                        {socials.map(l => (
+                                            <li key={l.label}>
+                                                <a href={safeHref(l.url) || '#'} target="_blank" rel="noopener noreferrer"
+                                                    className="text-ink-secondary hover:text-ink-primary underline-offset-4 hover:underline">
+                                                    {l.label}<span className="sr-only"> (opens in a new tab)</span>
+                                                </a>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                )}
                             </>
                         ) : (
                             /* Incomplete profile prompt */
@@ -147,25 +188,11 @@ const HeroSection = () => {
                         )}
                     </div>
 
-                    {/* Stats panel — right side, only if we have a name */}
-                    {hasName && (
-                        <div className="shrink-0 flex flex-row lg:flex-col gap-3 lg:gap-3 flex-wrap">
-                            {currentUser.visitor_count > 0 && (
-                                <div className="bg-obsidian-card border border-obsidian-border rounded-xl px-4 py-3 text-center min-w-[80px]">
-                                    <div className="font-grotesk text-xl font-bold text-ink-primary">
-                                        {currentUser.visitor_count >= 1000
-                                            ? `${(currentUser.visitor_count / 1000).toFixed(1)}k`
-                                            : currentUser.visitor_count}
-                                    </div>
-                                    <div className="text-xs text-ink-muted mt-0.5">Views</div>
-                                </div>
-                            )}
-                            {currentUser.title && (
-                                <div className="bg-obsidian-card border border-obsidian-border rounded-xl px-4 py-3 text-center max-w-[120px]">
-                                    <div className="text-xs font-medium text-ink-primary truncate">{currentUser.title}</div>
-                                    <div className="text-xs text-ink-muted mt-0.5">Title</div>
-                                </div>
-                            )}
+                    {/* Views count */}
+                    {hasName && currentUser.visitor_count > 0 && (
+                        <div className="shrink-0 inline-flex items-center gap-2 text-sm text-ink-muted" title="Profile views">
+                            <Eye size={14} aria-hidden="true" />
+                            <span>{currentUser.visitor_count >= 1000 ? `${(currentUser.visitor_count / 1000).toFixed(1)}k` : currentUser.visitor_count} views</span>
                         </div>
                     )}
                 </div>

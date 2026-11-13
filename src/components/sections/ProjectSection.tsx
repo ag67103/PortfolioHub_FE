@@ -7,6 +7,7 @@ import { ModalOverlay } from '../forms/ModalOverlay';
 import { ProjectAddEditForm } from '../forms/ProjectsForms';
 import DeleteConfirmationModal from '../forms/DeleteConfirmationModal';
 import { safeHref } from '../../utils/utility';
+import LivePreview from '../LivePreview';
 
 const formatDateForDisplay = (date: any): string | null => {
     if (!date) return null;
@@ -38,7 +39,7 @@ const ProjectSection: React.FC = () => {
     const [selectedProject, setSelectedProject] = useState<Project | null>(null);
     const [showAddForm, setShowAddForm] = useState(false);
     const [showAllProjects, setShowAllProjects] = useState(false);
-    const INITIAL_PROJECTS = 6;
+    const INITIAL_PROJECTS = 4;   // featured; the rest sit behind "Show all"
     const visibleProjects = showAllProjects ? projects : projects.slice(0, INITIAL_PROJECTS);
     const [showEditForm, setShowEditForm] = useState(false);
     const [showDeleteConfirmationModal, setShowDeleteConfirmationModal] = useState(false);
@@ -76,7 +77,7 @@ const ProjectSection: React.FC = () => {
                 {projects.length === 0 ? (
                     <div className="obs-card p-12 text-center max-w-lg mx-auto">
                         <div className="inline-flex items-center justify-center w-14 h-14 bg-accent-indigo/10 border border-accent-indigo/30 rounded-2xl mb-5">
-                            <FolderKanban className="w-7 h-7 text-accent-indigo" />
+                            <FolderKanban className="w-7 h-7 text-accent-light" />
                         </div>
                         <h3 className="font-grotesk text-xl font-bold text-ink-primary mb-2">No Projects Yet</h3>
                         <p className="text-ink-secondary mb-6 text-sm leading-relaxed">
@@ -95,12 +96,14 @@ const ProjectSection: React.FC = () => {
                                 {isMe && (
                                     <div className="absolute top-5 right-5 flex gap-2 opacity-100 [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover:opacity-100 focus-within:opacity-100 transition-opacity z-10">
                                         <button
+                                            aria-label={`Edit ${(project as any).title || (project as any).name || (project as any).institution || 'entry'}`}
                                             className="p-2 text-ink-muted hover:text-ink-primary hover:bg-obsidian-border rounded-lg transition-colors"
                                             onClick={() => { setSelectedProject(project); setShowEditForm(true); }}
                                         >
                                             <Edit2 size={14} />
                                         </button>
                                         <button
+                                            aria-label={`Delete ${(project as any).title || (project as any).name || (project as any).institution || 'entry'}`}
                                             className="p-2 text-ink-muted hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
                                             onClick={() => { setSelectedProject(project); setShowDeleteConfirmationModal(true); }}
                                         >
@@ -109,6 +112,13 @@ const ProjectSection: React.FC = () => {
                                     </div>
                                 )}
 
+                                <div className={safeHref(project.live_url) ? 'md:flex md:gap-7' : ''}>
+                                {safeHref(project.live_url) && project._id && (
+                                    <div className="md:w-[340px] md:shrink-0 mb-5 md:mb-0 self-start">
+                                        <LivePreview projectId={String(project._id)} url={safeHref(project.live_url)} title={project.title} />
+                                    </div>
+                                )}
+                                <div className="flex-1 min-w-0">
                                 <div className="flex flex-col md:flex-row md:items-start md:justify-between mb-4 gap-3">
                                     <div>
                                         <h3 className="font-grotesk text-xl font-bold text-ink-primary mb-2">{project.title}</h3>
@@ -116,13 +126,13 @@ const ProjectSection: React.FC = () => {
                                             <div className="flex gap-4">
                                                 {safeHref(project.live_url) && (
                                                     <a href={safeHref(project.live_url)} target="_blank" rel="noopener noreferrer"
-                                                        className="flex items-center gap-1.5 text-sm text-accent-indigo hover:text-accent-cyan transition-colors">
+                                                        className="flex items-center gap-1.5 text-sm text-accent-light hover:text-accent-cyan transition-colors">
                                                         <ExternalLink size={13} /> Live Demo
                                                     </a>
                                                 )}
                                                 {safeHref(project.code_url) && (
                                                     <a href={safeHref(project.code_url)} target="_blank" rel="noopener noreferrer"
-                                                        className="flex items-center gap-1.5 text-sm text-accent-indigo hover:text-accent-cyan transition-colors">
+                                                        className="flex items-center gap-1.5 text-sm text-accent-light hover:text-accent-cyan transition-colors">
                                                         <Github size={13} /> Source Code
                                                     </a>
                                                 )}
@@ -144,6 +154,8 @@ const ProjectSection: React.FC = () => {
                                     {(project.technologies as string[]).map((tech, i) => (
                                         <span key={`${project._id}-t-${i}`} className="obs-tag">{tech}</span>
                                     ))}
+                                </div>
+                                </div>
                                 </div>
                             </div>
                         ))}

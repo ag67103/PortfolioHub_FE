@@ -19,6 +19,8 @@ const calculateExperiencePeriod = (startDate: string, endDate?: string): string 
 };
 
 const ExperienceSection: React.FC = () => {
+    const [expandedIds, setExpandedIds] = useState<Record<string, boolean>>({});
+    const VISIBLE_BULLETS = 3;
     const { isMe } = useAuth();
     const { experiences } = usePortfolio();
     const [selectedExperience, setSelectedExperience] = useState<Experience | null>(null);
@@ -64,7 +66,7 @@ const ExperienceSection: React.FC = () => {
                 {experiences.length === 0 ? (
                     <div className="obs-card p-12 text-center max-w-lg mx-auto">
                         <div className="inline-flex items-center justify-center w-14 h-14 bg-accent-indigo/10 border border-accent-indigo/30 rounded-2xl mb-5">
-                            <Briefcase className="w-7 h-7 text-accent-indigo" />
+                            <Briefcase className="w-7 h-7 text-accent-light" />
                         </div>
                         <h3 className="font-grotesk text-xl font-bold text-ink-primary mb-2">No Experience Added Yet</h3>
                         <p className="text-ink-secondary mb-6 text-sm leading-relaxed">
@@ -91,12 +93,14 @@ const ExperienceSection: React.FC = () => {
                                     {isMe && (
                                         <div className="absolute top-5 right-5 flex gap-2 opacity-100 [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover:opacity-100 focus-within:opacity-100 transition-opacity">
                                             <button
+                                                aria-label={`Edit ${(exp as any).title || (exp as any).name || (exp as any).institution || 'entry'}`}
                                                 className="p-2 text-ink-muted hover:text-ink-primary hover:bg-obsidian-border rounded-lg transition-colors"
                                                 onClick={() => { setSelectedExperience(exp); setShowEditForm(true); }}
                                             >
                                                 <Edit2 size={14} />
                                             </button>
                                             <button
+                                                aria-label={`Delete ${(exp as any).title || (exp as any).name || (exp as any).institution || 'entry'}`}
                                                 className="p-2 text-ink-muted hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
                                                 onClick={() => { setSelectedExperience(exp); setShowDeleteConfirmationModal(true); }}
                                             >
@@ -108,18 +112,37 @@ const ExperienceSection: React.FC = () => {
                                     <div className="flex flex-col md:flex-row md:items-start md:justify-between mb-4 gap-2">
                                         <div>
                                             <h3 className="font-grotesk text-lg font-bold text-ink-primary">{exp.title}</h3>
-                                            <p className="text-accent-indigo font-medium text-sm mt-0.5">{exp.company}</p>
+                                            <p className="text-accent-light font-medium text-sm mt-0.5">{exp.company}</p>
                                         </div>
                                         <span className="text-xs font-medium text-ink-muted bg-obsidian-surface border border-obsidian-border px-3 py-1.5 rounded-full whitespace-nowrap self-start">
                                             {calculateExperiencePeriod(exp.start_date, exp.end_date)}
                                         </span>
                                     </div>
 
-                                    <ul className="space-y-1.5 text-ink-secondary mb-4 ml-4 list-disc list-outside text-sm">
-                                        {exp.description.split('\n').filter(l => l.trim()).map((desc, i) => (
-                                            <li key={i} className="leading-relaxed pl-1">{desc}</li>
-                                        ))}
-                                    </ul>
+                                    {(() => {
+                                        const bullets = exp.description.split('\n').filter(l => l.trim());
+                                        const key = String(exp._id);
+                                        const expanded = !!expandedIds[key];
+                                        const shown = expanded ? bullets : bullets.slice(0, VISIBLE_BULLETS);
+                                        return (
+                                            <>
+                                                <ul className="space-y-1.5 text-ink-secondary mb-3 ml-4 list-disc list-outside text-sm">
+                                                    {shown.map((desc, i) => (
+                                                        <li key={i} className="leading-relaxed pl-1">{desc}</li>
+                                                    ))}
+                                                </ul>
+                                                {bullets.length > VISIBLE_BULLETS && (
+                                                    <button
+                                                        onClick={() => setExpandedIds(prev => ({ ...prev, [key]: !expanded }))}
+                                                        aria-expanded={expanded}
+                                                        className="mb-4 ml-4 text-sm text-accent-light hover:underline"
+                                                    >
+                                                        {expanded ? 'Show less' : `Show ${bullets.length - VISIBLE_BULLETS} more`}
+                                                    </button>
+                                                )}
+                                            </>
+                                        );
+                                    })()}
 
                                     <div className="flex flex-wrap gap-2">
                                         {(exp.technologies as string[]).map((tech, i) => (

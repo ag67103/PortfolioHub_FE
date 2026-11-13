@@ -122,6 +122,24 @@ const authenticatedApi = (token: string) => {
     return instance;
 }
 
+export const getProjectEmbeddable = async(projectId: string): Promise<{ embeddable: boolean; reason?: string | null }> => {
+    try {
+        const response = await api.get(`/preview/embeddable/${projectId}`);
+        return response.data;
+    } catch {
+        return { embeddable: false, reason: 'check failed' };
+    }
+}
+
+export const getUserBySlug = async(slug: string): Promise<any> => {
+    try {
+        const response = await api.get(`/user/slug/${encodeURIComponent(slug)}`);
+        return response.data;
+    } catch(error: any) {
+        throw new Error('Failed to get user. Please try again.');
+    }
+}
+
 export const getUserByUserId = async(userId: string): Promise<any> => {
     try {
         const response = await api.get(`/user/${userId}`);
@@ -276,7 +294,7 @@ export const addSkill = async(skill: Skill): Promise<Skill> => {
         const response = await authenticatedApi(token).post('/skills', skill);
         return response.data;
     } catch (error: any) {
-        const serverMessage = error.response?.data?.detail?.message || error.response?.data?.detail;
+        const serverMessage = apiErrorMessage(error, '');
         throw new Error(serverMessage || 'Failed to add skill. Please try again.');
     }
 }
@@ -293,7 +311,7 @@ export const updateSkill = async(skillId: string, skill: Skill): Promise<Skill> 
         const response = await authenticatedApi(token).put(`/skills/${skillId}`, skill);
         return response.data;
     } catch (error: any) {
-        const serverMessage = error.response?.data?.detail?.message || error.response?.data?.detail;
+        const serverMessage = apiErrorMessage(error, '');
         throw new Error(serverMessage || 'Failed to update skill. Please try again.');
     }
 }
@@ -338,7 +356,7 @@ export const addProject = async(project: Project): Promise<Project> => {
         const response = await authenticatedApi(token).post('/projects', project);
         return response.data;
     } catch (error: any) {
-        const serverMessage = error.response?.data?.detail?.message || error.response?.data?.detail;
+        const serverMessage = apiErrorMessage(error, '');
         throw new Error(serverMessage || 'Failed to add project. Please try again.');
     }
 }
@@ -355,7 +373,7 @@ export const updateProject = async(projectId: string, project: Project): Promise
         const response = await authenticatedApi(token).put(`/projects/${projectId}`, project);
         return response.data;
     } catch (error: any) {
-        const serverMessage = error.response?.data?.detail?.message || error.response?.data?.detail;
+        const serverMessage = apiErrorMessage(error, '');
         throw new Error(serverMessage || 'Failed to update project. Please try again.');
     }
 }
@@ -400,7 +418,7 @@ export const addExperience = async(experience: Experience): Promise<Experience> 
         const response = await authenticatedApi(token).post('/experiences', experience);
         return response.data;
     } catch (error: any) {
-        const serverMessage = error.response?.data?.detail?.message || error.response?.data?.detail;
+        const serverMessage = apiErrorMessage(error, '');
         throw new Error(serverMessage || 'Failed to add experience. Please try again.');
     }
 }
@@ -417,7 +435,7 @@ export const updateExperience = async(experienceId: string, experience: Experien
         const response = await authenticatedApi(token).put(`/experiences/${experienceId}`, experience);
         return response.data;
     } catch (error: any) {
-        const serverMessage = error.response?.data?.detail?.message || error.response?.data?.detail;
+        const serverMessage = apiErrorMessage(error, '');
         throw new Error(serverMessage || 'Failed to update experience. Please try again.');
     }
 }
@@ -462,7 +480,7 @@ export const addEducation = async(education: Education): Promise<Education> => {
         const response = await authenticatedApi(token).post('/educations', education);
         return response.data;
     } catch(error: any) {
-        const serverMessage = error.response?.data?.detail?.message || error.response?.data?.detail;
+        const serverMessage = apiErrorMessage(error, '');
         throw new Error(serverMessage || 'Failed to add education. Please try again.');
     }
 }
@@ -479,7 +497,7 @@ export const updateEducation = async(educationId: string, education: Education):
         const response = await authenticatedApi(token).put(`/educations/${educationId}`, education);
         return response.data;
     } catch(error: any) {
-        const serverMessage = error.response?.data?.detail?.message || error.response?.data?.detail;
+        const serverMessage = apiErrorMessage(error, '');
         throw new Error(serverMessage || 'Failed to update education. Please try again.');
     }
 }
@@ -524,7 +542,7 @@ export const addCertification = async(certification: Certification): Promise<Cer
         const response = await authenticatedApi(token).post('/certifications', certification);
         return response.data;
     } catch(error: any) {
-        const serverMessage = error.response?.data?.detail?.message || error.response?.data?.detail;
+        const serverMessage = apiErrorMessage(error, '');
         throw new Error(serverMessage || 'Failed to add certification. Please try again.');
     }
 }
@@ -541,7 +559,7 @@ export const updateCertification = async(certificationId: string, certification:
         const response = await authenticatedApi(token).put(`/certifications/${certificationId}`, certification);
         return response.data;
     } catch(error: any) {
-        const serverMessage = error.response?.data?.detail?.message || error.response?.data?.detail;
+        const serverMessage = apiErrorMessage(error, '');
         throw new Error(serverMessage || 'Failed to update certification. Please try again.');
     }
 }
@@ -586,7 +604,7 @@ export const addAward = async(award: Omit<Award, 'id' | 'created_at' | 'updated_
         const response = await authenticatedApi(token).post('/awards', award);
         return response.data;
     } catch(error: any) {
-        const serverMessage = error.response?.data?.detail?.message || error.response?.data?.detail;
+        const serverMessage = apiErrorMessage(error, '');
         throw new Error(serverMessage || 'Failed to add award. Please try again.');
     }
 }
@@ -603,7 +621,7 @@ export const updateAward = async(awardId: string, award: Award): Promise<Award> 
         const response = await authenticatedApi(token).put(`/awards/${awardId}`, award);
         return response.data;
     } catch(error: any) {
-        const serverMessage = error.response?.data?.detail?.message || error.response?.data?.detail;
+        const serverMessage = apiErrorMessage(error, '');
         throw new Error(serverMessage || 'Failed to update award. Please try again.');
     }
 }
@@ -638,7 +656,7 @@ export const sendAuthenticatedUserMessage = async(message: {
         const response = await authenticatedApi(token).post('/message/send', message);
         return response.data;
     } catch(error: any) {
-        const serverMessage = error.response?.data?.detail?.message || error.response?.data?.detail || error.response?.data?.message;
+        const serverMessage = apiErrorMessage(error, '');
         throw new Error(serverMessage || 'Failed to send message. Please try again.');
     }
 }
@@ -654,13 +672,15 @@ export const sendUnauthenticatedUserMessage = async(message: {
     messageSubject?: string;  // Optional subject, backend will provide default if not provided
     messageContent: string;
     recipientUserId: string;
+    website?: string;   // honeypot: always empty for real visitors
 }): Promise<Message> => {
     try {
         const response = await api.post('/message/send/unauthenticated', message);
         return response.data;
     } catch(error: any) {
-        const serverMessage = error.response?.data?.detail?.message || error.response?.data?.detail || error.response?.data?.message;
-        throw new Error(serverMessage || 'Failed to send message. Please try again.');
+        const serverMessage = apiErrorMessage(error, '');
+        if (error.response?.status === 422) throw new Error('Please check your message: name and message are required (message up to 5000 characters).');
+        throw new Error(typeof serverMessage === 'string' ? serverMessage : 'Failed to send message. Please try again.');
     }
 }
 
@@ -769,14 +789,28 @@ export const getPortfolioByUserId = async(userId: string): Promise<any> => {
  * @param portfolio - Portfolio object containing portfolio information
  * @returns Portfolio object if successful, throws error if failed
  */
+/** A readable message from an API error. FastAPI sends validation errors (422) as a list of {loc, msg}. */
+export const apiErrorMessage = (error: any, fallback: string): string => {
+    const detail = error?.response?.data?.detail;
+    if (Array.isArray(detail)) {
+        const parts = detail.map((d: any) => {
+            const field = Array.isArray(d?.loc) ? String(d.loc[d.loc.length - 1]).replace(/_/g, ' ') : '';
+            const msg = String(d?.msg ?? '').replace(/^Value error, /, '');
+            return field ? `${field}: ${msg}` : msg;
+        }).filter(Boolean);
+        if (parts.length) return parts.join('; ');
+    }
+    const message = detail?.message || (typeof detail === 'string' ? detail : '') || error?.response?.data?.message;
+    return typeof message === 'string' && message ? message : fallback;
+};
+
 export const updatePortfolio = async(portfolio: Partial<any>): Promise<any> => {
     const token = localStorage.getItem('access_token') ?? '';
     try {
         const response = await authenticatedApi(token).put('/portfolio/', portfolio);
         return response.data;
     } catch(error: any) {
-        const serverMessage = error.response?.data?.detail?.message || error.response?.data?.detail;
-        throw new Error(serverMessage || 'Failed to update portfolio. Please try again.');
+        throw new Error(apiErrorMessage(error, 'Failed to update portfolio. Please try again.'));
     }
 }
 

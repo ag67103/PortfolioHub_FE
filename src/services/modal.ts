@@ -87,6 +87,10 @@ export interface Portfolio {
     leetcode_url?: string;
     website_url?: string;
     title?: string;
+    phone?: string;
+    address?: string | null;
+    slug?: string | null;
+    open_to_work?: boolean;
 
     status_code?: number;
     message?: string;

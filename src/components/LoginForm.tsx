@@ -27,36 +27,49 @@ const LoginForm: React.FC = () => {
         }
     }
 
+    const inputCls = "w-full px-4 py-3 rounded-lg bg-obsidian-surface border border-obsidian-border text-ink-primary placeholder-ink-muted focus:outline-none focus:border-accent-indigo focus:ring-2 focus:ring-accent-indigo/40";
+
     return (
-        <form onSubmit={handleLogin} className="space-y-6">
+        <form onSubmit={handleLogin} className="space-y-5">
             {error && (
-                <div className="p-3 bg-red-500/10 border border-red-500/30 rounded-lg text-sm text-red-400">{error}</div>
+                <div role="alert" className="p-3 bg-red-500/10 border border-red-500/30 rounded-lg text-sm text-red-300">{error}</div>
             )}
-            <input
-                type="email"
-                placeholder="Email"
-                className="w-full px-4 py-3 rounded-lg bg-white/80 text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                autoComplete="email"
-            />
-            
-            <div className="relative">
+            <div>
+                <label htmlFor="login-email" className="block text-sm font-medium text-ink-secondary mb-1.5">Email</label>
                 <input
-                    type={showPassword ? 'text' : 'password'}
-                    placeholder="Password"
-                    className="w-full px-4 py-3 rounded-lg bg-white/80 text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                    value={password}
-                    onChange={e => setPassword(e.target.value)}
+                    id="login-email"
+                    type="email"
+                    placeholder="you@example.com"
+                    className={inputCls}
+                    value={email}
+                    onChange={e => setEmail(e.target.value)}
+                    autoComplete="username"
+                    required
                 />
-                <button
-                    type="button"
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-blue-500 text-xs"
-                    onClick={() => setShowPassword(v => !v)}
-                    tabIndex={-1}
-                >
-                    {showPassword ? 'Hide' : 'Show'}
-                </button>
+            </div>
+
+            <div>
+                <label htmlFor="login-password" className="block text-sm font-medium text-ink-secondary mb-1.5">Password</label>
+                <div className="relative">
+                    <input
+                        id="login-password"
+                        type={showPassword ? 'text' : 'password'}
+                        placeholder="Your password"
+                        className={`${inputCls} pr-16`}
+                        value={password}
+                        onChange={e => setPassword(e.target.value)}
+                        autoComplete="current-password"
+                        required
+                    />
+                    <button
+                        type="button"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-accent-light hover:underline text-xs font-medium"
+                        onClick={() => setShowPassword(v => !v)}
+                        aria-pressed={showPassword}
+                    >
+                        {showPassword ? 'Hide' : 'Show'}
+                    </button>
+                </div>
             </div>
 
             <button

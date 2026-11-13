@@ -17,12 +17,13 @@ module.exports = {
           indigo: '#6366f1',
           cyan: '#22d3ee',
           violet: '#8b5cf6',
+          light: '#818cf8',   // indigo for text on dark backgrounds (AA contrast)
         },
         ink: {
           primary: '#f1f5f9',
           secondary: '#94a3b8',
-          muted: '#64748b',
-          faint: '#334155',
+          muted: '#8795ab',
+          faint: '#7b8aa3',
         },
         primary: {
           purple: '#6366f1',

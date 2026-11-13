@@ -32,7 +32,7 @@ const Footer: React.FC = () => {
                     <div>
                         <div className="flex items-center gap-2 mb-4">
                             <span className="font-grotesk font-semibold text-ink-primary">
-                                Portfolio<span className="text-accent-indigo">Hub</span>
+                                Portfolio<span className="text-accent-light">Hub</span>
                             </span>
                         </div>
                         <p className="text-ink-muted text-sm leading-relaxed">
@@ -67,19 +67,19 @@ const Footer: React.FC = () => {
                         <div className="flex flex-col gap-3">
                             {currentUser?.github_url && (
                                 <a href={currentUser.github_url} target="_blank" rel="noopener noreferrer"
-                                    className="flex items-center gap-2 text-ink-muted hover:text-accent-indigo transition-colors text-sm">
+                                    className="flex items-center gap-2 text-ink-muted hover:text-accent-light transition-colors text-sm">
                                     <Github size={15} /> <span>GitHub</span> <ExternalLink size={12} className="opacity-40" />
                                 </a>
                             )}
                             {currentUser?.linkedin_url && (
                                 <a href={currentUser.linkedin_url} target="_blank" rel="noopener noreferrer"
-                                    className="flex items-center gap-2 text-ink-muted hover:text-accent-indigo transition-colors text-sm">
+                                    className="flex items-center gap-2 text-ink-muted hover:text-accent-light transition-colors text-sm">
                                     <Linkedin size={15} /> <span>LinkedIn</span> <ExternalLink size={12} className="opacity-40" />
                                 </a>
                             )}
                             {currentUser?.email && (
                                 <a href={`mailto:${currentUser.email}`}
-                                    className="flex items-center gap-2 text-ink-muted hover:text-accent-indigo transition-colors text-sm">
+                                    className="flex items-center gap-2 text-ink-muted hover:text-accent-light transition-colors text-sm">
                                     <Mail size={15} /> <span>{currentUser.email}</span>
                                 </a>
                             )}

@@ -12,6 +12,7 @@ export const ContactMeForm = () => {
         messageSubject: '',
         messageContent: '',
     });
+    const [honeypot, setHoneypot] = useState('');   // bots fill this hidden field; people never see it
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [success, setSuccess] = useState(false);
@@ -67,6 +68,7 @@ export const ContactMeForm = () => {
                     messageSubject: message.messageSubject.trim() || undefined,
                     messageContent: message.messageContent,
                     recipientUserId: currentUser.id,
+                    website: honeypot,
                 });
             }
 
@@ -88,37 +90,40 @@ export const ContactMeForm = () => {
 
     return (
         <form onSubmit={handleSubmit} className="w-full space-y-5">
+            <div aria-hidden="true" style={{ position: 'absolute', left: '-10000px', width: 1, height: 1, overflow: 'hidden' }}>
+                <label>Website <input type="text" name="website" tabIndex={-1} autoComplete="off" value={honeypot} onChange={e => setHoneypot(e.target.value)} /></label>
+            </div>
             {error && (
-                <div className="p-3 bg-red-500/10 border border-red-500/30 rounded-lg text-sm text-red-400">{error}</div>
+                <div role="alert" className="p-3 bg-red-500/10 border border-red-500/30 rounded-lg text-sm text-red-400">{error}</div>
             )}
             {success && (
-                <div className="p-3 bg-emerald-500/10 border border-emerald-500/30 rounded-lg text-sm text-emerald-400">
+                <div role="status" className="p-3 bg-emerald-500/10 border border-emerald-500/30 rounded-lg text-sm text-emerald-400">
                     Message sent successfully! Thank you for reaching out.
                 </div>
             )}
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
                 <div>
-                    <label className={labelCls}><User className="w-4 h-4 text-accent-indigo" /> Your Name</label>
+                    <label className={labelCls}><User className="w-4 h-4 text-accent-light" /> Your Name</label>
                     <input type="text" name="senderName" placeholder="John Doe" value={message.senderName} onChange={handleInputChange} className={inputCls} required />
                 </div>
                 <div>
-                    <label className={labelCls}><Mail className="w-4 h-4 text-accent-indigo" /> Your Email</label>
+                    <label className={labelCls}><Mail className="w-4 h-4 text-accent-light" /> Your Email</label>
                     <input type="email" name="senderEmail" placeholder="john@example.com" value={message.senderEmail} onChange={handleInputChange} className={inputCls} required />
                 </div>
             </div>
 
             <div>
                 <label className={labelCls}>
-                    <MessageSquare className="w-4 h-4 text-accent-indigo" />
+                    <MessageSquare className="w-4 h-4 text-accent-light" />
                     Subject <span className="text-ink-muted text-xs font-normal">(optional)</span>
                 </label>
                 <input type="text" name="messageSubject" placeholder="What's this about?" value={message.messageSubject} onChange={handleInputChange} className={inputCls} />
             </div>
 
             <div>
-                <label className={labelCls}><MessageSquare className="w-4 h-4 text-accent-indigo" /> Message</label>
-                <textarea
+                <label className={labelCls}><MessageSquare className="w-4 h-4 text-accent-light" /> Message</label>
+                <textarea maxLength={5000}
                     name="messageContent"
                     placeholder="Type your message here..."
                     value={message.messageContent}

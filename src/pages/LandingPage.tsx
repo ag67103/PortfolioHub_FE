@@ -37,7 +37,7 @@ const MockPortfolioCard: React.FC = () => (
         </div>
         <div>
           <div className="font-semibold text-ink-primary text-sm">Alex Morgan</div>
-          <div className="text-xs text-accent-indigo mt-0.5">Full-Stack Engineer</div>
+          <div className="text-xs text-accent-light mt-0.5">Full-Stack Engineer</div>
           <div className="text-xs text-ink-muted mt-0.5">San Francisco, CA</div>
         </div>
       </div>
@@ -63,7 +63,7 @@ const MockPortfolioCard: React.FC = () => (
         <div key={name as string} className="mb-2.5">
           <div className="flex justify-between text-xs mb-1">
             <span className="text-ink-secondary">{name}</span>
-            <span className="text-accent-indigo">{pct}%</span>
+            <span className="text-accent-light">{pct}%</span>
           </div>
           <div className="h-1 bg-obsidian-surface rounded-full">
             <div className="h-full rounded-full bg-gradient-to-r from-accent-indigo to-accent-cyan"
@@ -120,7 +120,7 @@ const LandingPage: React.FC = () => {
           <div className="flex flex-col lg:flex-row items-center gap-16 lg:gap-12">
             {/* Left */}
             <div className="flex-1 text-center lg:text-left max-w-xl mx-auto lg:mx-0">
-              <div className="inline-flex items-center gap-2 bg-accent-indigo/10 border border-accent-indigo/25 text-accent-indigo px-4 py-1.5 rounded-full text-xs font-medium mb-8 tracking-wide">
+              <div className="inline-flex items-center gap-2 bg-accent-indigo/10 border border-accent-indigo/25 text-accent-light px-4 py-1.5 rounded-full text-xs font-medium mb-8 tracking-wide">
                 <Zap size={12} /> Free for everyone · No credit card needed
               </div>
 
@@ -157,7 +157,7 @@ const LandingPage: React.FC = () => {
                 <div className="relative animate-float">
                   <MockPortfolioCard />
                 </div>
-                <div className="absolute -bottom-4 -left-4 bg-obsidian-card border border-accent-indigo/30 rounded-xl px-3 py-2 text-xs font-medium text-accent-indigo shadow-glow-indigo">
+                <div className="absolute -bottom-4 -left-4 bg-obsidian-card border border-accent-indigo/30 rounded-xl px-3 py-2 text-xs font-medium text-accent-light shadow-glow-indigo">
                   🔗 {window.location.host}/user/you
                 </div>
               </div>
@@ -186,7 +186,7 @@ const LandingPage: React.FC = () => {
                 className="obs-card p-6 reveal"
                 style={{ transitionDelay: `${i * 60}ms` }}>
                 <div className="p-2.5 bg-accent-indigo/10 border border-accent-indigo/20 rounded-xl inline-flex mb-4">
-                  <Icon className="w-5 h-5 text-accent-indigo" />
+                  <Icon className="w-5 h-5 text-accent-light" />
                 </div>
                 <h3 className="font-grotesk font-semibold text-ink-primary mb-2">{title}</h3>
                 <p className="text-sm text-ink-secondary leading-relaxed">{desc}</p>
@@ -241,7 +241,7 @@ const LandingPage: React.FC = () => {
                 ].map(({ icon: Icon, t, d }) => (
                   <div key={t} className="flex gap-4">
                     <div className="p-2 bg-accent-indigo/10 border border-accent-indigo/20 rounded-lg shrink-0 h-fit">
-                      <Icon className="w-4 h-4 text-accent-indigo" />
+                      <Icon className="w-4 h-4 text-accent-light" />
                     </div>
                     <div>
                       <div className="font-grotesk font-semibold text-ink-primary mb-1 text-sm">{t}</div>
@@ -288,14 +288,14 @@ const LandingPage: React.FC = () => {
         <div className="container mx-auto px-4 lg:px-8">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="font-grotesk font-semibold text-ink-primary">
-              Portfolio<span className="text-accent-indigo">Hub</span>
+              Portfolio<span className="text-accent-light">Hub</span>
               <span className="text-ink-muted font-normal text-sm ml-3">© {new Date().getFullYear()}</span>
             </div>
             <div className="flex gap-6 text-sm text-ink-muted">
               <Link to="/privacy-policy" className="hover:text-ink-primary transition-colors">Privacy</Link>
               <Link to="/terms-of-service" className="hover:text-ink-primary transition-colors">Terms</Link>
               <Link to="/login" className="hover:text-ink-primary transition-colors">Sign in</Link>
-              <Link to="/register" className="text-accent-indigo hover:text-accent-cyan transition-colors font-medium">Get started →</Link>
+              <Link to="/register" className="text-accent-light hover:text-accent-cyan transition-colors font-medium">Get started →</Link>
             </div>
           </div>
         </div>

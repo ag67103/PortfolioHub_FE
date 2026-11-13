@@ -1,14 +1,17 @@
-import { createContext, ReactNode, useContext, useEffect, useState } from "react";
+import { createContext, ReactNode, useContext, useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { getMe, getUserByUserId, incrementVisitorCount, logout as logoutApi } from "../services/api";
+import { getMe, getUserBySlug, getUserByUserId, incrementVisitorCount, logout as logoutApi } from "../services/api";
 
 interface AuthContextType {
     isAuthenticated: boolean;
     setIsAuthenticated: (value: boolean) => void;
     loggedInUser: any;
     setLoggedInUser: (user: any) => void;
-    isMe: boolean;
+    isMe: boolean;              // viewing own profile AND not in preview mode (controls edit UI)
+    isOwner: boolean;           // viewing own profile (even in preview mode)
     setIsMe: (value: boolean) => void;
+    previewMode: boolean;       // owner is looking at the page as a visitor would
+    setPreviewMode: (value: boolean) => void;
     isValidUser: boolean;
     setIsValidUser: (value: boolean) => void;
     currentUser: any;
@@ -23,7 +26,13 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const [isMe, setIsMe] = useState(false);
+    const [isOwner, setIsMe] = useState(false);
+    const [previewMode, setPreviewModeState] = useState<boolean>(() => sessionStorage.getItem('preview_as_visitor') === '1');
+    const setPreviewMode = (value: boolean) => {
+        sessionStorage.setItem('preview_as_visitor', value ? '1' : '0');
+        setPreviewModeState(value);
+    };
+    const isMe = isOwner && !previewMode;
     const [isValidUser, setIsValidUser] = useState(false);
 
     const [isLoggedInUserLoading, setIsLoggedInUserLoading] = useState(true);
@@ -33,45 +42,44 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [currentUser, setCurrentUser] = useState<any>(null);  
 
     const location = useLocation();
-    const match = location.pathname.match(/^\/user\/([^/]+)/);
-    const currentUserId = match ? match[1] : undefined;
+    // Profile pages: /u/<slug> (public link) or /user/<id>; anywhere else shows the logged-in user's own portfolio
+    const slugMatch = location.pathname.match(/^\/u\/([^/]+)/);
+    const idMatch = location.pathname.match(/^\/user\/([^/]+)/);
+    const routeSlug = slugMatch ? decodeURIComponent(slugMatch[1]) : undefined;
+    const currentUserId = idMatch ? idMatch[1] : undefined;
+    const routeKey = routeSlug ? `s:${routeSlug}` : currentUserId ? `i:${currentUserId}` : 'me';
+    const loadedKey = useRef<string | null>(null);
 
     const getLoggedInUser = async () => {
         const user = await getMe();
         setLoggedInUser(user);
     }
 
-    const getCurrentUser = async (currentUserId: string | undefined) => {
-        if (!currentUserId) {
-            currentUserId = loggedInUser?.id;
-        }
-        if (!currentUserId) {
-            // Logged out on the landing page: there is no profile to load
-            setCurrentUser(null);
-            return;
-        }
+    const getCurrentUser = async (routeUserId: string | undefined) => {
         try {
-            const user = await getUserByUserId(currentUserId);
+            let user: any;
+            if (routeSlug) {
+                user = await getUserBySlug(routeSlug);
+            } else {
+                const id = routeUserId ?? loggedInUser?.id;
+                if (!id) {
+                    // Logged out on the landing page: there is no profile to load
+                    setCurrentUser(null);
+                    return;
+                }
+                user = await getUserByUserId(id);
+            }
             setCurrentUser(user);
-            
-            // Increment visitor count if viewing someone else's portfolio (or if not logged in)
-            // Only increment once per session to avoid spam
-            const isViewingOwnProfile = loggedInUser && loggedInUser.id === currentUserId;
-            if (currentUserId && !isViewingOwnProfile) {
-                const visitKey = `visited_${currentUserId}`;
-                const hasVisited = sessionStorage.getItem(visitKey);
-                
-                if (!hasVisited) {
-                    try {
-                        const result = await incrementVisitorCount(currentUserId);
-                        sessionStorage.setItem(visitKey, 'true');
-                        if (result && result.visitor_count !== undefined) {
-                            setCurrentUser({ ...user, visitor_count: result.visitor_count });
-                        }
-                    } catch (error) {
-                        // Not critical. A 429 just means this visitor was already counted in the last minute.
-                        sessionStorage.setItem(visitKey, 'true');
-                        if ((error as any)?.response?.status !== 429) console.error('Failed to increment visitor count:', error);
+
+            // Count a visit once per session, only when looking at someone else's portfolio
+            const isViewingOwnProfile = loggedInUser && loggedInUser.id === user.id;
+            if (user.id && !isViewingOwnProfile) {
+                const visitKey = `visited_${user.id}`;
+                if (!sessionStorage.getItem(visitKey)) {
+                    const result = await incrementVisitorCount(user.id);   // null on 429 / failure (not critical)
+                    sessionStorage.setItem(visitKey, 'true');
+                    if (result && result.visitor_count !== undefined) {
+                        setCurrentUser({ ...user, visitor_count: result.visitor_count });
                     }
                 }
             }
@@ -79,6 +87,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             setCurrentUser(null);
         }
     }
+
+    // Moving to another profile (e.g. /u/a -> /u/b) must load that profile
+    useEffect(() => {
+        if (loadedKey.current !== null && loadedKey.current !== routeKey) setIsCurrentUserLoading(true);
+    }, [routeKey]);
 
     useEffect(() => {
         const initialize = async () => {
@@ -89,11 +102,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
             if (isCurrentUserLoading && !isLoggedInUserLoading) {
                 await getCurrentUser(currentUserId);
+                loadedKey.current = routeKey;
                 setIsCurrentUserLoading(false);
             }
         };
         initialize();
-    }, [isCurrentUserLoading, isLoggedInUserLoading, currentUserId]);
+    }, [isCurrentUserLoading, isLoggedInUserLoading, routeKey]);
 
     useEffect(() => {
         setIsAuthenticated(!!(loggedInUser && loggedInUser?.id));
@@ -113,7 +127,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ isAuthenticated, setIsAuthenticated, isMe, setIsMe, isValidUser, setIsValidUser, loggedInUser, setLoggedInUser, currentUser, setCurrentUser, logout, isCurrentUserLoading, setIsCurrentUserLoading }}>
+        <AuthContext.Provider value={{ isAuthenticated, setIsAuthenticated, isMe, isOwner, setIsMe, previewMode, setPreviewMode, isValidUser, setIsValidUser, loggedInUser, setLoggedInUser, currentUser, setCurrentUser, logout, isCurrentUserLoading, setIsCurrentUserLoading }}>
             {children}
         </AuthContext.Provider>
     );

@@ -248,7 +248,7 @@ const MonthYearPicker: React.FC<MonthYearPickerProps> = ({ value, onChange, plac
                     if (showYearDropdown) { setCurrentYear(prev => prev - 1); }
                     else { setCurrentMonth(prev => prev === 0 ? 11 : prev - 1); if (currentMonth === 0) setCurrentYear(prev => prev - 1); }
                   }}
-                  className={`p-1.5 rounded-lg transition-colors ${showYearDropdown ? 'bg-accent-indigo/20 text-accent-indigo' : 'hover:bg-obsidian-border text-ink-muted'}`}
+                  className={`p-1.5 rounded-lg transition-colors ${showYearDropdown ? 'bg-accent-indigo/20 text-accent-light' : 'hover:bg-obsidian-border text-ink-muted'}`}
                 >
                   <ChevronLeft className="w-3.5 h-3.5" />
                 </button>
@@ -258,7 +258,7 @@ const MonthYearPicker: React.FC<MonthYearPickerProps> = ({ value, onChange, plac
                     if (showYearDropdown) { setCurrentYear(prev => prev + 1); }
                     else { setCurrentMonth(prev => prev === 11 ? 0 : prev + 1); if (currentMonth === 11) setCurrentYear(prev => prev + 1); }
                   }}
-                  className={`p-1.5 rounded-lg transition-colors ${showYearDropdown ? 'bg-accent-indigo/20 text-accent-indigo' : 'hover:bg-obsidian-border text-ink-muted'}`}
+                  className={`p-1.5 rounded-lg transition-colors ${showYearDropdown ? 'bg-accent-indigo/20 text-accent-light' : 'hover:bg-obsidian-border text-ink-muted'}`}
                 >
                   <ChevronRight className="w-3.5 h-3.5" />
                 </button>
@@ -286,7 +286,7 @@ const MonthYearPicker: React.FC<MonthYearPickerProps> = ({ value, onChange, plac
                                 ? 'bg-accent-indigo text-white font-medium'
                                 : isInvalidYear
                                   ? 'text-ink-muted cursor-not-allowed opacity-40'
-                                  : 'text-ink-secondary hover:bg-accent-indigo/10 hover:text-accent-indigo'
+                                  : 'text-ink-secondary hover:bg-accent-indigo/10 hover:text-accent-light'
                             }`}
                           >
                             {year}
@@ -319,7 +319,7 @@ const MonthYearPicker: React.FC<MonthYearPickerProps> = ({ value, onChange, plac
                         className={`px-2 py-2 text-xs font-medium rounded-lg transition-colors flex items-center justify-center ${
                           isInvalidMonth
                             ? 'text-ink-muted cursor-not-allowed opacity-40'
-                            : 'text-ink-secondary hover:bg-accent-indigo/10 hover:text-accent-indigo'
+                            : 'text-ink-secondary hover:bg-accent-indigo/10 hover:text-accent-light'
                         }`}
                       >
                         {month}
@@ -361,8 +361,8 @@ const MonthYearPicker: React.FC<MonthYearPickerProps> = ({ value, onChange, plac
                           !day.isCurrentMonth || isInvalidDate
                             ? 'text-ink-muted/30 cursor-not-allowed'
                             : day.isToday
-                              ? 'bg-accent-indigo/20 text-accent-indigo font-medium'
-                              : 'text-ink-secondary hover:bg-accent-indigo/10 hover:text-accent-indigo'
+                              ? 'bg-accent-indigo/20 text-accent-light font-medium'
+                              : 'text-ink-secondary hover:bg-accent-indigo/10 hover:text-accent-light'
                         }`}
                       >
                         {day.date}
