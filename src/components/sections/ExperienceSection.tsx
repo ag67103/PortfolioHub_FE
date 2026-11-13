@@ -89,7 +89,7 @@ const ExperienceSection: React.FC = () => {
                                     <div className="absolute -left-[2.75rem] top-6 w-3 h-3 rounded-full bg-accent-indigo border-2 border-obsidian-bg hidden sm:block" />
 
                                     {isMe && (
-                                        <div className="absolute top-5 right-5 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <div className="absolute top-5 right-5 flex gap-2 opacity-100 [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover:opacity-100 focus-within:opacity-100 transition-opacity">
                                             <button
                                                 className="p-2 text-ink-muted hover:text-ink-primary hover:bg-obsidian-border rounded-lg transition-colors"
                                                 onClick={() => { setSelectedExperience(exp); setShowEditForm(true); }}

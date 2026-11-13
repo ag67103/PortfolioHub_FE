@@ -37,6 +37,9 @@ const ProjectSection: React.FC = () => {
     const { projects } = usePortfolio();
     const [selectedProject, setSelectedProject] = useState<Project | null>(null);
     const [showAddForm, setShowAddForm] = useState(false);
+    const [showAllProjects, setShowAllProjects] = useState(false);
+    const INITIAL_PROJECTS = 6;
+    const visibleProjects = showAllProjects ? projects : projects.slice(0, INITIAL_PROJECTS);
     const [showEditForm, setShowEditForm] = useState(false);
     const [showDeleteConfirmationModal, setShowDeleteConfirmationModal] = useState(false);
 
@@ -87,10 +90,10 @@ const ProjectSection: React.FC = () => {
                     </div>
                 ) : (
                     <div className="space-y-6">
-                        {projects.map((project, index) => (
+                        {visibleProjects.map((project, index) => (
                             <div key={project._id || `proj-${index}`} className="obs-card p-7 relative group">
                                 {isMe && (
-                                    <div className="absolute top-5 right-5 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+                                    <div className="absolute top-5 right-5 flex gap-2 opacity-100 [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover:opacity-100 focus-within:opacity-100 transition-opacity z-10">
                                         <button
                                             className="p-2 text-ink-muted hover:text-ink-primary hover:bg-obsidian-border rounded-lg transition-colors"
                                             onClick={() => { setSelectedProject(project); setShowEditForm(true); }}
@@ -144,6 +147,17 @@ const ProjectSection: React.FC = () => {
                                 </div>
                             </div>
                         ))}
+                        {projects.length > INITIAL_PROJECTS && (
+                            <div className="flex justify-center pt-2">
+                                <button
+                                    onClick={() => setShowAllProjects(v => !v)}
+                                    className="px-6 py-2.5 rounded-xl border border-obsidian-border text-sm font-medium text-ink-secondary hover:text-ink-primary hover:bg-obsidian-border transition-colors"
+                                    aria-expanded={showAllProjects}
+                                >
+                                    {showAllProjects ? 'Show fewer projects' : `Show all ${projects.length} projects`}
+                                </button>
+                            </div>
+                        )}
                     </div>
                 )}
             </div>

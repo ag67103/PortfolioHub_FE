@@ -45,8 +45,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         if (!currentUserId) {
             currentUserId = loggedInUser?.id;
         }
+        if (!currentUserId) {
+            // Logged out on the landing page: there is no profile to load
+            setCurrentUser(null);
+            return;
+        }
         try {
-            const user = await getUserByUserId(currentUserId ?? '');
+            const user = await getUserByUserId(currentUserId);
             setCurrentUser(user);
             
             // Increment visitor count if viewing someone else's portfolio (or if not logged in)
@@ -60,16 +65,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                     try {
                         const result = await incrementVisitorCount(currentUserId);
                         sessionStorage.setItem(visitKey, 'true');
-                        // Refresh user data to get accurate count from server
                         if (result && result.visitor_count !== undefined) {
                             setCurrentUser({ ...user, visitor_count: result.visitor_count });
-                        } else {
-                            // Fallback: increment locally if server response doesn't have count
-                            setCurrentUser({ ...user, visitor_count: (user.visitor_count || 0) + 1 });
                         }
                     } catch (error) {
-                        // Silently fail - visitor count is not critical
-                        console.error('Failed to increment visitor count:', error);
+                        // Not critical. A 429 just means this visitor was already counted in the last minute.
+                        sessionStorage.setItem(visitKey, 'true');
+                        if ((error as any)?.response?.status !== 429) console.error('Failed to increment visitor count:', error);
                     }
                 }
             }

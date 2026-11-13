@@ -102,10 +102,10 @@ const SkillsSection: React.FC = () => {
                                                 {shown.map((skill: any) => (
                                                     <div key={skill._id} className="bg-obsidian-surface border border-obsidian-border rounded-lg p-4 hover:border-accent-indigo/40 transition-all duration-300 group/skill">
                                                         <div className="flex justify-between items-center mb-3">
-                                                            <h4 className="text-sm font-semibold text-ink-primary truncate">{skill.name}</h4>
+                                                            <h4 title={skill.name} className="text-sm font-semibold text-ink-primary break-words">{skill.name}</h4>
                                                             <div className="flex items-center gap-1.5">
                                                                 {isMe && (
-                                                                    <div className="flex gap-1 opacity-0 group-hover/skill:opacity-100 transition-opacity">
+                                                                    <div className="flex gap-1 opacity-100 [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover/skill:opacity-100 focus-within:opacity-100 transition-opacity">
                                                                         <button
                                                                             className="p-1.5 text-ink-muted hover:text-ink-primary hover:bg-obsidian-border rounded transition-colors"
                                                                             onClick={() => { setSelectedSkill(skill); setShowEditForm(true); }}

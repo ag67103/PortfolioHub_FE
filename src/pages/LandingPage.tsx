@@ -1,8 +1,8 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import {
   ArrowRight, Briefcase, Code2, GraduationCap, Award,
-  Share2, Download, Zap, Globe, Lock, Star
+  Share2, Download, Zap, Globe, Lock
 } from 'lucide-react';
 
 /* ── tiny hook: reveal on scroll ── */
@@ -27,7 +27,7 @@ const MockPortfolioCard: React.FC = () => (
       <div className="w-2.5 h-2.5 rounded-full bg-red-500/60" />
       <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/60" />
       <div className="w-2.5 h-2.5 rounded-full bg-green-500/60" />
-      <span className="ml-3 text-xs text-ink-muted">portfoliohub.dev/user/alex</span>
+      <span className="ml-3 text-xs text-ink-muted">{window.location.host}/user/alex</span>
     </div>
     {/* Hero area */}
     <div className="p-5 border-b border-obsidian-border bg-gradient-to-br from-obsidian-card to-obsidian-surface">
@@ -147,20 +147,6 @@ const LandingPage: React.FC = () => {
                 </Link>
               </div>
 
-              {/* Trust signals */}
-              <div className="flex items-center gap-6 mt-10 justify-center lg:justify-start">
-                <div className="flex -space-x-2">
-                  {['#6366f1','#22d3ee','#8b5cf6','#f472b6'].map((c,i) => (
-                    <div key={i} className="w-8 h-8 rounded-full border-2 border-obsidian-bg flex items-center justify-center text-xs font-bold text-white"
-                      style={{ background: c }}>
-                      {['A','B','C','D'][i]}
-                    </div>
-                  ))}
-                </div>
-                <div className="text-sm text-ink-muted">
-                  <span className="text-ink-primary font-semibold">500+</span> professionals already building
-                </div>
-              </div>
             </div>
 
             {/* Right — mock portfolio */}
@@ -171,32 +157,14 @@ const LandingPage: React.FC = () => {
                 <div className="relative animate-float">
                   <MockPortfolioCard />
                 </div>
-                {/* Floating badge */}
-                <div className="absolute -top-4 -right-4 bg-obsidian-card border border-obsidian-border rounded-xl px-3 py-2 text-xs font-medium text-ink-primary shadow-glow-card flex items-center gap-2">
-                  <Star size={11} className="text-yellow-400 fill-yellow-400" /> 4.9 avg rating
-                </div>
                 <div className="absolute -bottom-4 -left-4 bg-obsidian-card border border-accent-indigo/30 rounded-xl px-3 py-2 text-xs font-medium text-accent-indigo shadow-glow-indigo">
-                  🔗 portfoliohub.dev/u/you
+                  🔗 {window.location.host}/user/you
                 </div>
               </div>
             </div>
           </div>
         </div>
       </section>
-
-      {/* ── SOCIAL PROOF BAR ── */}
-      <div className="border-y border-obsidian-border bg-obsidian-surface py-5">
-        <div className="container mx-auto px-4 lg:px-8">
-          <div className="flex flex-wrap items-center justify-center gap-8 text-center">
-            {[['500+','Professionals'],['1,200+','Portfolios created'],['50k+','Profile views'],['Free','Always']].map(([n,l]) => (
-              <div key={l}>
-                <div className="font-grotesk text-2xl font-bold text-ink-primary">{n}</div>
-                <div className="text-xs text-ink-muted mt-0.5">{l}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
 
       {/* ── FEATURES ── */}
       <section className="section-surface py-24">
@@ -259,7 +227,7 @@ const LandingPage: React.FC = () => {
       {/* ── WHY US ── */}
       <section className="section-surface py-24">
         <div className="container mx-auto px-4 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          <div className="max-w-3xl mx-auto">
             <div className="reveal">
               <span className="section-label" data-label="Why Portfolio Hub" />
               <h2 className="font-grotesk text-4xl font-bold text-ink-primary mt-2 mb-6 leading-tight">
@@ -268,7 +236,7 @@ const LandingPage: React.FC = () => {
               <div className="space-y-5">
                 {[
                   { icon: Zap, t: 'No design skills needed', d: 'The layout adapts to your content. Whether you have 2 projects or 20, your portfolio always looks polished.' },
-                  { icon: Globe, t: 'Permanent public link', d: 'Share portfoliohub.dev/user/you on your LinkedIn bio, resume, or email signature.' },
+                  { icon: Globe, t: 'Permanent public link', d: `Share ${window.location.host}/user/you on your LinkedIn bio, resume, or email signature.` },
                   { icon: Lock, t: 'Your data, your control', d: 'Edit, update, or delete any section anytime. No vendor lock-in, no hidden fees.' },
                 ].map(({ icon: Icon, t, d }) => (
                   <div key={t} className="flex gap-4">
@@ -284,30 +252,6 @@ const LandingPage: React.FC = () => {
               </div>
             </div>
 
-            {/* Testimonial-style quotes */}
-            <div className="space-y-4 reveal">
-              {[
-                { quote: 'I got three interview callbacks within a week of sharing my Portfolio Hub link on LinkedIn. The layout just works.', name: 'Priya S.', role: 'Frontend Engineer' },
-                { quote: "Finally a portfolio tool that doesn't require me to be a designer. My resume data became a beautiful page in 20 minutes.", name: 'Marcus L.', role: 'Data Scientist' },
-                { quote: 'I replaced my old website with this. Cleaner, faster to update, and I can track who\'s viewing it.', name: 'Sara K.', role: 'DevOps Engineer' },
-              ].map(({ quote, name, role }) => (
-                <div key={name} className="obs-card p-5">
-                  <div className="flex gap-1 mb-3">
-                    {[...Array(5)].map((_, i) => <Star key={i} size={12} className="text-yellow-400 fill-yellow-400" />)}
-                  </div>
-                  <p className="text-sm text-ink-secondary leading-relaxed mb-3 italic">"{quote}"</p>
-                  <div className="flex items-center gap-2.5">
-                    <div className="w-7 h-7 rounded-full bg-gradient-to-br from-accent-indigo to-accent-cyan flex items-center justify-center text-xs font-bold text-white">
-                      {name[0]}
-                    </div>
-                    <div>
-                      <div className="text-xs font-semibold text-ink-primary">{name}</div>
-                      <div className="text-xs text-ink-muted">{role}</div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
           </div>
         </div>
       </section>
@@ -328,8 +272,7 @@ const LandingPage: React.FC = () => {
               Ready to stand out?
             </h2>
             <p className="text-ink-secondary text-lg mb-8 leading-relaxed">
-              Join hundreds of professionals who already use Portfolio Hub
-              to land interviews and impress clients.
+              Turn your resume into a clean, shareable portfolio, and keep it up to date in one place.
             </p>
             <Link to="/register"
               className="btn-glow inline-flex items-center gap-2 px-8 py-4 rounded-xl text-base font-semibold">

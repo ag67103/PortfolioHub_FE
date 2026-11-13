@@ -102,7 +102,7 @@ const HeroSection = () => {
 
                                 {currentUser.portfolio_description && (
                                     <p className="text-ink-secondary max-w-xl leading-relaxed mb-5 text-sm lg:text-base">
-                                        {currentUser.portfolio_description}
+                                        {currentUser.portfolio_description.split('\n')[0]}
                                     </p>
                                 )}
 

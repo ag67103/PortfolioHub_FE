@@ -76,7 +76,7 @@ const CertificationSection = () => {
                         {certifications.map((cert) => (
                             <div key={cert._id} className="obs-card p-6 relative group">
                                 {isMe && (
-                                    <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <div className="absolute top-4 right-4 flex gap-2 opacity-100 [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover:opacity-100 focus-within:opacity-100 transition-opacity">
                                         <button
                                             className="p-2 text-ink-muted hover:text-ink-primary hover:bg-obsidian-border rounded-lg transition-colors"
                                             onClick={() => { setSelectedCertificate(cert); setShowEditForm(true); }}

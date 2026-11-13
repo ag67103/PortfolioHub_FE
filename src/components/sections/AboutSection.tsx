@@ -67,7 +67,7 @@ const AboutSection: React.FC = () => {
               {isMe && (
                 <button
                   onClick={() => setShowEditForm(true)}
-                  className="absolute top-5 right-5 p-2 text-ink-muted hover:text-ink-primary hover:bg-obsidian-border rounded-lg transition-all duration-200 opacity-0 group-hover:opacity-100"
+                  className="absolute top-5 right-5 p-2 text-ink-muted hover:text-ink-primary hover:bg-obsidian-border rounded-lg transition-all duration-200 opacity-100 [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover:opacity-100 focus-within:opacity-100"
                   aria-label="Edit portfolio"
                 >
                   <Edit2 size={16} />
@@ -85,7 +85,7 @@ const AboutSection: React.FC = () => {
                       <p className="text-accent-indigo font-medium text-lg mb-2">{currentUser.portfolio_title}</p>
                     )}
                     {currentUser.portfolio_description && (
-                      <p className="text-ink-secondary max-w-3xl mx-auto leading-relaxed">{currentUser.portfolio_description}</p>
+                      <div className="text-ink-secondary max-w-3xl mx-auto leading-relaxed space-y-4">{String(currentUser.portfolio_description).split(/\n+/).filter((l: string) => l.trim()).map((para: string, i: number) => <p key={i}>{para}</p>)}</div>
                     )}
                   </>
                 ) : (

@@ -12,9 +12,10 @@ import { useAuth } from "../context/AuthContext";
 import ContactManagement from "../components/sections/ContactManagement";
 import ContactSection from "../components/sections/ContactSection";
 import Footer from "../components/Footer";
+import LandingPage from "./LandingPage";
 
 const Home: React.FC = () => {
-    const { isMe, isValidUser, isCurrentUserLoading } = useAuth();
+    const { isMe, isValidUser, isCurrentUserLoading, isAuthenticated, currentUser } = useAuth();
     const location = useLocation();
 
     useEffect(() => {
@@ -25,6 +26,11 @@ const Home: React.FC = () => {
             }, 100);
         }
     }, [location.state]);
+
+    useEffect(() => {
+        const name = [currentUser?.first_name, currentUser?.last_name].filter(Boolean).join(' ');
+        document.title = name ? `${name} | Portfolio` : 'Portfolio Hub';
+    }, [currentUser]);
 
     // isCurrentUserLoading is the authoritative "still initialising" flag —
     // it resolves after both getLoggedInUser + getCurrentUser complete.
@@ -37,6 +43,11 @@ const Home: React.FC = () => {
                 </div>
             </div>
         );
+    }
+
+    // Logged-out visitor on the home page: there is no profile to show, so show the product landing page
+    if (!isAuthenticated && location.pathname === '/') {
+        return <LandingPage />;
     }
 
     // Authenticated or viewing someone's profile → show portfolio

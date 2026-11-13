@@ -137,8 +137,8 @@ export const incrementVisitorCount = async(userId: string): Promise<any> => {
         const response = await api.post(`/user/${userId}/increment-visitor`);
         return response.data;
     } catch(error: any) {
-        // Silently fail - visitor count is not critical
-        console.error('Failed to increment visitor count:', error);
+        // Not critical. A 429 only means this visitor was already counted in the last minute.
+        if (error?.response?.status !== 429) console.error('Failed to increment visitor count:', error);
         return null;
     }
 }

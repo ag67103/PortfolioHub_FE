@@ -455,10 +455,6 @@ const ContactManagement = () => {
         };
     }, [handleSocketMessage, isAuthenticated]);
 
-    useEffect(() => {
-        document.title = 'Contact Management';
-    }, []);
-
     // Scroll to top functionality
     const scrollToTop = () => {
         const messageList = document.querySelector('.message-list-container');
