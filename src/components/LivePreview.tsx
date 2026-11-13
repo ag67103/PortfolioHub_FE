@@ -17,7 +17,7 @@ const hostOf = (url: string) => {
 
 /**
  * A real-time preview of a project's running site: the actual page is loaded in a scaled-down,
- * non-interactive frame (nothing is stored). Sites that forbid being embedded (X-Frame-Options / CSP
+ * non-interactive, anonymous frame (nothing is stored). Sites that forbid being embedded (X-Frame-Options / CSP
  * frame-ancestors) get a clean "Open live site" card instead of an error page.
  */
 const LivePreview: React.FC<LivePreviewProps> = ({ projectId, url, title }) => {
@@ -66,6 +66,9 @@ const LivePreview: React.FC<LivePreviewProps> = ({ projectId, url, title }) => {
                         loading="lazy"
                         tabIndex={-1}
                         sandbox="allow-scripts allow-same-origin"
+                        // Anonymous view: the frame gets no cookies or storage from the viewer's browser, so a visitor who happens to be
+                        // signed in to the previewed site sees its public sign-in page, not their own account (Chromium; others ignore it)
+                        {...({ credentialless: 'true' } as any)}
                         referrerPolicy="no-referrer"
                         onLoad={() => setLoaded(true)}
                         width={FRAME_WIDTH}
